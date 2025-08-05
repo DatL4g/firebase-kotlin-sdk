@@ -10,9 +10,9 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 version = project.property("firebase-common-internal.version") as String
 
 plugins {
-    id("com.android.library")
-    kotlin("multiplatform")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.multiplatform)
+    alias(libs.plugins.kotlinx.serialization)
     id("testOptionsConvention")
 }
 
@@ -112,36 +112,26 @@ kotlin {
             }
         }
 
-        getByName("commonMain") {
-            dependencies {
-                implementation(project(":firebase-common"))
-                api(libs.kotlinx.serialization.core)
-            }
+        commonMain.dependencies {
+            implementation(project(":firebase-common"))
+            api(libs.kotlinx.serialization.core)
+        }
+        commonTest.dependencies {
+            implementation(project(":test-utils"))
         }
 
-        getByName("commonTest") {
-            dependencies {
-                implementation(project(":test-utils"))
-            }
+        androidMain.dependencies {
+            api(libs.google.firebase.common)
         }
 
-        getByName("androidMain") {
-            dependencies {
-                api(libs.google.firebase.common)
-            }
+        jsMain.dependencies {
+            api(npm("firebase", "10.12.2"))
         }
 
-        getByName("jsMain") {
-            dependencies {
-                api(npm("firebase", "10.12.2"))
-            }
-        }
-
-        getByName("jvmMain") {
+        val jvmMain by getting {
             kotlin.srcDir("src/androidMain/kotlin")
         }
-
-        getByName("jvmTest") {
+        val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
             }

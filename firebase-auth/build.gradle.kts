@@ -12,9 +12,9 @@ import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTes
 version = project.property("firebase-auth.version") as String
 
 plugins {
-    id("com.android.library")
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.native.cocoapods)
+    alias(libs.plugins.multiplatform)
     id("testOptionsConvention")
 }
 

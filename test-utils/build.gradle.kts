@@ -12,9 +12,9 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 version = "0.0.1"
 
 plugins {
-    id("com.android.library")
-    kotlin("multiplatform")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.multiplatform)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -98,24 +98,18 @@ kotlin {
             }
         }
 
-        getByName("commonMain") {
-            dependencies {
-                api(kotlin("test"))
-                api(libs.kotlinx.coroutines.core)
-                api(libs.kotlinx.coroutines.test)
-            }
+        commonMain.dependencies {
+            api(kotlin("test"))
+            api(libs.kotlinx.coroutines.core)
+            api(libs.kotlinx.coroutines.test)
         }
 
-        getByName("jsMain") {
-            dependencies {
-                implementation(kotlin("test-js"))
-            }
+        jsMain.dependencies {
+            implementation(kotlin("test-js"))
         }
 
-        getByName("jvmMain") {
-            dependencies {
-                api(libs.kotlinx.coroutines.swing)
-            }
+        jvmMain.dependencies {
+            api(libs.kotlinx.coroutines.swing)
         }
     }
 }

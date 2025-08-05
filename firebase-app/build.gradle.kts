@@ -10,9 +10,9 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 version = project.property("firebase-app.version") as String
 
 plugins {
-    id("com.android.library")
-    kotlin("native.cocoapods")
-    kotlin("multiplatform")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.native.cocoapods)
+    alias(libs.plugins.multiplatform)
     id("testOptionsConvention")
 }
 
@@ -124,25 +124,18 @@ kotlin {
             }
         }
 
-        getByName("commonMain") {
-            dependencies {
-                implementation(project(":firebase-common"))
-            }
+        commonMain.dependencies {
+            implementation(project(":firebase-common"))
+        }
+        commonTest.dependencies {
+            implementation(project(":test-utils"))
         }
 
-        getByName("commonTest") {
-            dependencies {
-                implementation(project(":test-utils"))
-            }
+        androidMain.dependencies {
+            api(libs.google.firebase.common)
         }
 
-        getByName("androidMain") {
-            dependencies {
-                api(libs.google.firebase.common)
-            }
-        }
-
-        getByName("jvmMain") {
+        val jvmMain by getting {
             kotlin.srcDir("src/androidMain/kotlin")
         }
     }

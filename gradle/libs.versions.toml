@@ -52,6 +52,7 @@ dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 ben-manes-versions = { id = "com.github.ben-manes.versions", version.ref = "ben-manes-versions" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinx-binarycompatibilityvalidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx-binarycompatibilityvalidator" }
