@@ -64,14 +64,11 @@ import dev.gitlive.firebase.database.js as publicJs
 public actual val Firebase.database: FirebaseDatabase
     get() = rethrow { FirebaseDatabase(getDatabase()) }
 
-public actual fun Firebase.database(app: FirebaseApp): FirebaseDatabase =
-    rethrow { FirebaseDatabase(getDatabase(app = app.js)) }
+public actual fun Firebase.database(app: FirebaseApp): FirebaseDatabase = rethrow { FirebaseDatabase(getDatabase(app = app.js)) }
 
-public actual fun Firebase.database(url: String): FirebaseDatabase =
-    rethrow { FirebaseDatabase(getDatabase(url = url)) }
+public actual fun Firebase.database(url: String): FirebaseDatabase = rethrow { FirebaseDatabase(getDatabase(url = url)) }
 
-public actual fun Firebase.database(app: FirebaseApp, url: String): FirebaseDatabase =
-    rethrow { FirebaseDatabase(getDatabase(app = app.js, url = url)) }
+public actual fun Firebase.database(app: FirebaseApp, url: String): FirebaseDatabase = rethrow { FirebaseDatabase(getDatabase(app = app.js, url = url)) }
 
 public actual class FirebaseDatabase internal constructor(public val js: Database) {
 
@@ -188,8 +185,7 @@ internal actual class NativeDatabaseReference internal constructor(
         set(js, encodedValue).awaitWhileOnline(database)
     }
 
-    actual suspend fun updateEncodedChildren(encodedUpdate: EncodedObject) =
-        rethrow { update(js, encodedUpdate.js).awaitWhileOnline(database) }
+    actual suspend fun updateEncodedChildren(encodedUpdate: EncodedObject) = rethrow { update(js, encodedUpdate.js).awaitWhileOnline(database) }
 
     actual suspend fun <T> runTransaction(strategy: KSerializer<T>, buildSettings: EncodeDecodeSettingsBuilder.() -> Unit, transactionUpdate: (currentData: T) -> T): DataSnapshot = DataSnapshot(
         jsRunTransaction<Any?>(js, transactionUpdate = { currentData ->
@@ -208,11 +204,9 @@ public actual class DataSnapshot internal constructor(
         return js.`val`()
     }
 
-    public actual inline fun <reified T> value(): T =
-        rethrow { decode<T>(value = publicJs.`val`()) }
+    public actual inline fun <reified T> value(): T = rethrow { decode<T>(value = publicJs.`val`()) }
 
-    public actual inline fun <T> value(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T =
-        rethrow { decode(strategy, publicJs.`val`(), buildSettings) }
+    public actual inline fun <T> value(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T = rethrow { decode(strategy, publicJs.`val`(), buildSettings) }
 
     public actual val exists: Boolean get() = rethrow { js.exists() }
     public actual val key: String? get() = rethrow { js.key }
@@ -238,11 +232,9 @@ internal actual class NativeOnDisconnect internal constructor(
     actual suspend fun removeValue() = rethrow { js.remove().awaitWhileOnline(database) }
     actual suspend fun cancel() = rethrow { js.cancel().awaitWhileOnline(database) }
 
-    actual suspend fun setEncodedValue(encodedValue: Any?) =
-        rethrow { js.set(encodedValue).awaitWhileOnline(database) }
+    actual suspend fun setEncodedValue(encodedValue: Any?) = rethrow { js.set(encodedValue).awaitWhileOnline(database) }
 
-    actual suspend fun updateEncodedChildren(encodedUpdate: EncodedObject) =
-        rethrow { js.update(encodedUpdate.js).awaitWhileOnline(database) }
+    actual suspend fun updateEncodedChildren(encodedUpdate: EncodedObject) = rethrow { js.update(encodedUpdate.js).awaitWhileOnline(database) }
 }
 
 public val OnDisconnect.js: dev.gitlive.firebase.database.externals.OnDisconnect get() = native.js
