@@ -204,9 +204,9 @@ public actual class DataSnapshot internal constructor(
         return js.`val`()
     }
 
-    public actual inline fun <reified T> value(): T = rethrow { decode<T>(value = publicJs.`val`()) }
+    public actual inline fun <reified T> value(): T = rethrow { decode<T>(value = js.`val`()) }
 
-    public actual inline fun <T> value(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T = rethrow { decode(strategy, publicJs.`val`(), buildSettings) }
+    public actual inline fun <T> value(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T = rethrow { decode(strategy, js.`val`(), buildSettings) }
 
     public actual val exists: Boolean get() = rethrow { js.exists() }
     public actual val key: String? get() = rethrow { js.key }

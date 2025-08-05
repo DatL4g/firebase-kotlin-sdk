@@ -88,8 +88,6 @@ kotlin {
     sourceSets {
         all {
             languageSettings.apply {
-                this.apiVersion = libs.versions.settings.api.get()
-                this.languageVersion = libs.versions.settings.language.get()
                 progressiveMode = true
                 if (name.lowercase().contains("ios")) {
                     optIn("kotlinx.cinterop.ExperimentalForeignApi")

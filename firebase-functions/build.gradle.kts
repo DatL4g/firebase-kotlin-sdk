@@ -114,8 +114,6 @@ kotlin {
     sourceSets {
         all {
             languageSettings.apply {
-                this.apiVersion = libs.versions.settings.api.get()
-                this.languageVersion = libs.versions.settings.language.get()
                 progressiveMode = true
                 optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
                 optIn("kotlinx.serialization.InternalSerializationApi")
@@ -138,7 +136,7 @@ kotlin {
             api(libs.google.firebase.functions)
         }
 
-        val jvmTest by getting {
+        val jvmMain by getting {
             kotlin.srcDir("src/androidMain/kotlin")
         }
 

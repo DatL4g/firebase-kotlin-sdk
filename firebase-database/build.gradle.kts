@@ -115,8 +115,6 @@ kotlin {
     sourceSets {
         all {
             languageSettings.apply {
-                this.apiVersion = libs.versions.settings.api.get()
-                this.languageVersion = libs.versions.settings.language.get()
                 progressiveMode = true
                 optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
                 optIn("kotlinx.coroutines.FlowPreview")
