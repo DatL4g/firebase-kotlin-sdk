@@ -4,7 +4,6 @@ import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseApp
 import dev.gitlive.firebase.FirebaseException
 import dev.gitlive.firebase.installations.externals.*
-import dev.gitlive.firebase.js
 import kotlinx.coroutines.await
 
 public actual val Firebase.installations: FirebaseInstallations

@@ -9,8 +9,6 @@ package dev.gitlive.firebase.functions
 import dev.gitlive.firebase.DecodeSettings
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseApp
-import dev.gitlive.firebase.android
-import dev.gitlive.firebase.functions.android as publicAndroid
 import dev.gitlive.firebase.internal.decode
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.DeserializationStrategy

@@ -17,7 +17,6 @@ import dev.gitlive.firebase.functions.externals.getFunctions
 import dev.gitlive.firebase.functions.externals.httpsCallable
 import dev.gitlive.firebase.functions.externals.invoke
 import dev.gitlive.firebase.internal.decode
-import dev.gitlive.firebase.js
 import kotlinx.coroutines.await
 import kotlinx.serialization.DeserializationStrategy
 import kotlin.js.json

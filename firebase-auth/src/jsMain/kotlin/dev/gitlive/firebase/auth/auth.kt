@@ -28,7 +28,6 @@ import dev.gitlive.firebase.auth.externals.verifyPasswordResetCode
 import dev.gitlive.firebase.auth.externals.checkActionCode
 import dev.gitlive.firebase.auth.externals.connectAuthEmulator
 import dev.gitlive.firebase.auth.externals.IdTokenResult
-import dev.gitlive.firebase.js
 import kotlinx.coroutines.await
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

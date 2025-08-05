@@ -3,9 +3,7 @@ package dev.gitlive.firebase.perf.metrics
 import com.google.firebase.perf.metrics.Trace as AndroidTrace
 import dev.gitlive.firebase.perf.session.PerfSession
 
-public val Trace.android: AndroidTrace get() = android
-
-public actual class Trace internal constructor(internal val android: AndroidTrace) {
+public actual class Trace internal constructor(public val android: AndroidTrace) {
 
     public actual fun start() {
         android.start()

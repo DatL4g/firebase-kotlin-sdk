@@ -12,20 +12,17 @@ import com.google.firebase.auth.ActionCodeResult.*
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseApp
-import dev.gitlive.firebase.android as publicAndroid
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
-public val FirebaseAuth.android: com.google.firebase.auth.FirebaseAuth get() = com.google.firebase.auth.FirebaseAuth.getInstance()
-
 public actual val Firebase.auth: FirebaseAuth
     get() = FirebaseAuth(com.google.firebase.auth.FirebaseAuth.getInstance())
 
-public actual fun Firebase.auth(app: FirebaseApp): FirebaseAuth = FirebaseAuth(com.google.firebase.auth.FirebaseAuth.getInstance(app.publicAndroid))
+public actual fun Firebase.auth(app: FirebaseApp): FirebaseAuth = FirebaseAuth(com.google.firebase.auth.FirebaseAuth.getInstance(app.android))
 
-public actual class FirebaseAuth internal constructor(internal val android: com.google.firebase.auth.FirebaseAuth) {
+public actual class FirebaseAuth internal constructor(public val android: com.google.firebase.auth.FirebaseAuth) {
     public actual val currentUser: FirebaseUser?
         get() = android.currentUser?.let { FirebaseUser(it) }
 
@@ -110,9 +107,7 @@ public actual class FirebaseAuth internal constructor(internal val android: com.
     public actual fun useEmulator(host: String, port: Int): Unit = android.useEmulator(host, port)
 }
 
-public val AuthResult.android: com.google.firebase.auth.AuthResult get() = android
-
-public actual class AuthResult(internal val android: com.google.firebase.auth.AuthResult) {
+public actual class AuthResult(public val android: com.google.firebase.auth.AuthResult) {
     public actual val user: FirebaseUser?
         get() = android.user?.let { FirebaseUser(it) }
     public actual val credential: AuthCredential?
@@ -121,11 +116,8 @@ public actual class AuthResult(internal val android: com.google.firebase.auth.Au
         get() = android.additionalUserInfo?.let { AdditionalUserInfo(it) }
 }
 
-public val AdditionalUserInfo.android: com.google.firebase.auth.AdditionalUserInfo
-    get() = android
-
 public actual class AdditionalUserInfo(
-    internal val android: com.google.firebase.auth.AdditionalUserInfo,
+    public val android: com.google.firebase.auth.AdditionalUserInfo,
 ) {
     public actual val providerId: String?
         get() = android.providerId
@@ -137,9 +129,7 @@ public actual class AdditionalUserInfo(
         get() = android.isNewUser
 }
 
-public val AuthTokenResult.android: com.google.firebase.auth.GetTokenResult get() = android
-
-public actual class AuthTokenResult(internal val android: com.google.firebase.auth.GetTokenResult) {
+public actual class AuthTokenResult(public val android: com.google.firebase.auth.GetTokenResult) {
 //    actual val authTimestamp: Long
 //        get() = android.authTimestamp
     public actual val claims: Map<String, Any>
@@ -160,7 +150,7 @@ internal fun ActionCodeSettings.toAndroid() = com.google.firebase.auth.ActionCod
     .also { androidPackageName?.run { it.setAndroidPackageName(packageName, installIfNotAvailable, minimumVersion) } }
     .also { dynamicLinkDomain?.run { it.setDynamicLinkDomain(this) } }
     .setHandleCodeInApp(canHandleCodeInApp)
-    .also { iOSBundleId?.run { it.setIOSBundleId(this) } }
+    .also { iOSBundleId?.run { it.iosBundleId = this } }
     .build()
 
 public actual typealias FirebaseAuthException = com.google.firebase.auth.FirebaseAuthException

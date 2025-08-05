@@ -7,7 +7,6 @@ package dev.gitlive.firebase.storage
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseApp
 import dev.gitlive.firebase.FirebaseException
-import dev.gitlive.firebase.js
 import dev.gitlive.firebase.storage.externals.*
 import kotlinx.coroutines.await
 import kotlinx.coroutines.cancel

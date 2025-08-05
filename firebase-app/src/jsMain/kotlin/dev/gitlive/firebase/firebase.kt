@@ -22,9 +22,7 @@ public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions, n
 
 public actual fun Firebase.initialize(context: Any?, options: FirebaseOptions): FirebaseApp = FirebaseApp(initializeApp(options.toJson()))
 
-public val FirebaseApp.js: JsFirebaseApp get() = js
-
-public actual class FirebaseApp internal constructor(internal val js: JsFirebaseApp) {
+public actual class FirebaseApp internal constructor(public val js: JsFirebaseApp) {
     public actual val name: String
         get() = js.name
     public actual val options: FirebaseOptions

@@ -74,7 +74,7 @@ public sealed class ActionCodeResult {
 public data class ActionCodeSettings(
     val url: String,
     val androidPackageName: AndroidPackageName? = null,
-    val dynamicLinkDomain: String? = null,
+    @Deprecated("Dynamic Links are deprecated") val dynamicLinkDomain: String? = null,
     val canHandleCodeInApp: Boolean = false,
     val iOSBundleId: String? = null,
 )

@@ -3,7 +3,6 @@ package dev.gitlive.firebase.remoteconfig
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseApp
 import dev.gitlive.firebase.FirebaseException
-import dev.gitlive.firebase.js
 import dev.gitlive.firebase.remoteconfig.externals.*
 import kotlinx.coroutines.await
 import kotlin.js.json

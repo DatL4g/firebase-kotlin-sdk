@@ -31,7 +31,6 @@ import dev.gitlive.firebase.internal.EncodedObject
 import dev.gitlive.firebase.internal.decode
 import dev.gitlive.firebase.internal.js
 import dev.gitlive.firebase.internal.reencodeTransformation
-import dev.gitlive.firebase.js
 import kotlinx.coroutines.asDeferred
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.coroutineScope
@@ -59,7 +58,6 @@ import dev.gitlive.firebase.database.externals.orderByKey as jsOrderByKey
 import dev.gitlive.firebase.database.externals.orderByValue as jsOrderByValue
 import dev.gitlive.firebase.database.externals.runTransaction as jsRunTransaction
 import dev.gitlive.firebase.database.externals.startAt as jsStartAt
-import dev.gitlive.firebase.database.js as publicJs
 
 public actual val Firebase.database: FirebaseDatabase
     get() = rethrow { FirebaseDatabase(getDatabase()) }
@@ -89,8 +87,6 @@ internal actual open class NativeQuery(
     val database: Database,
 )
 
-public val Query.js: JsQuery get() = nativeQuery.js
-
 public actual open class Query internal actual constructor(
     internal val nativeQuery: NativeQuery,
 ) {
@@ -98,16 +94,17 @@ public actual open class Query internal actual constructor(
     internal constructor(js: JsQuery, database: Database) : this(NativeQuery(js, database))
 
     public val database: Database = nativeQuery.database
+    public val js: JsQuery = nativeQuery.js
 
-    public actual fun orderByKey(): Query = Query(query(publicJs, jsOrderByKey()), database)
-    public actual fun orderByValue(): Query = Query(query(publicJs, jsOrderByValue()), database)
-    public actual fun orderByChild(path: String): Query = Query(query(publicJs, jsOrderByChild(path)), database)
+    public actual fun orderByKey(): Query = Query(query(js, jsOrderByKey()), database)
+    public actual fun orderByValue(): Query = Query(query(js, jsOrderByValue()), database)
+    public actual fun orderByChild(path: String): Query = Query(query(js, jsOrderByChild(path)), database)
 
     public actual val valueEvents: Flow<DataSnapshot>
         get() = callbackFlow {
             val unsubscribe = rethrow {
                 onValue(
-                    query = publicJs,
+                    query = js,
                     callback = { trySend(DataSnapshot(it, database)) },
                     cancelCallback = { close(DatabaseException(it)).run { } },
                 )
@@ -133,39 +130,39 @@ public actual open class Query internal actual constructor(
                 }
 
                 when (type) {
-                    ChildEvent.Type.ADDED -> onChildAdded(publicJs, callback, cancelCallback)
-                    ChildEvent.Type.CHANGED -> onChildChanged(publicJs, callback, cancelCallback)
-                    ChildEvent.Type.MOVED -> onChildMoved(publicJs, callback, cancelCallback)
-                    ChildEvent.Type.REMOVED -> onChildRemoved(publicJs, callback, cancelCallback)
+                    ChildEvent.Type.ADDED -> onChildAdded(js, callback, cancelCallback)
+                    ChildEvent.Type.CHANGED -> onChildChanged(js, callback, cancelCallback)
+                    ChildEvent.Type.MOVED -> onChildMoved(js, callback, cancelCallback)
+                    ChildEvent.Type.REMOVED -> onChildRemoved(js, callback, cancelCallback)
                 }
             }
         }
         awaitClose { rethrow { unsubscribes.forEach { it.invoke() } } }
     }
 
-    public actual fun startAt(value: String, key: String?): Query = Query(query(publicJs, jsStartAt(value, key ?: undefined)), database)
+    public actual fun startAt(value: String, key: String?): Query = Query(query(js, jsStartAt(value, key ?: undefined)), database)
 
-    public actual fun startAt(value: Double, key: String?): Query = Query(query(publicJs, jsStartAt(value, key ?: undefined)), database)
+    public actual fun startAt(value: Double, key: String?): Query = Query(query(js, jsStartAt(value, key ?: undefined)), database)
 
-    public actual fun startAt(value: Boolean, key: String?): Query = Query(query(publicJs, jsStartAt(value, key ?: undefined)), database)
+    public actual fun startAt(value: Boolean, key: String?): Query = Query(query(js, jsStartAt(value, key ?: undefined)), database)
 
-    public actual fun endAt(value: String, key: String?): Query = Query(query(publicJs, jsEndAt(value, key ?: undefined)), database)
+    public actual fun endAt(value: String, key: String?): Query = Query(query(js, jsEndAt(value, key ?: undefined)), database)
 
-    public actual fun endAt(value: Double, key: String?): Query = Query(query(publicJs, jsEndAt(value, key ?: undefined)), database)
+    public actual fun endAt(value: Double, key: String?): Query = Query(query(js, jsEndAt(value, key ?: undefined)), database)
 
-    public actual fun endAt(value: Boolean, key: String?): Query = Query(query(publicJs, jsEndAt(value, key ?: undefined)), database)
+    public actual fun endAt(value: Boolean, key: String?): Query = Query(query(js, jsEndAt(value, key ?: undefined)), database)
 
-    public actual fun limitToFirst(limit: Int): Query = Query(query(publicJs, jsLimitToFirst(limit)), database)
+    public actual fun limitToFirst(limit: Int): Query = Query(query(js, jsLimitToFirst(limit)), database)
 
-    public actual fun limitToLast(limit: Int): Query = Query(query(publicJs, jsLimitToLast(limit)), database)
+    public actual fun limitToLast(limit: Int): Query = Query(query(js, jsLimitToLast(limit)), database)
 
-    public actual fun equalTo(value: String, key: String?): Query = Query(query(publicJs, jsEqualTo(value, key ?: undefined)), database)
+    public actual fun equalTo(value: String, key: String?): Query = Query(query(js, jsEqualTo(value, key ?: undefined)), database)
 
-    public actual fun equalTo(value: Double, key: String?): Query = Query(query(publicJs, jsEqualTo(value, key ?: undefined)), database)
+    public actual fun equalTo(value: Double, key: String?): Query = Query(query(js, jsEqualTo(value, key ?: undefined)), database)
 
-    public actual fun equalTo(value: Boolean, key: String?): Query = Query(query(publicJs, jsEqualTo(value, key ?: undefined)), database)
+    public actual fun equalTo(value: Boolean, key: String?): Query = Query(query(js, jsEqualTo(value, key ?: undefined)), database)
 
-    override fun toString(): String = publicJs.toString()
+    override fun toString(): String = js.toString()
 }
 
 internal actual class NativeDatabaseReference internal constructor(
