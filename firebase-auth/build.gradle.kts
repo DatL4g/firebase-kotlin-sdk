@@ -125,23 +125,16 @@ kotlin {
             }
         }
 
-        getByName("commonMain") {
-            dependencies {
-                api(project(":firebase-app"))
-                implementation(project(":firebase-common"))
-            }
+        commonMain.dependencies {
+            api(project(":firebase-app"))
+            implementation(project(":firebase-common"))
+        }
+        commonTest.dependencies {
+            implementation(project(":test-utils"))
         }
 
-        getByName("commonTest") {
-            dependencies {
-                implementation(project(":test-utils"))
-            }
-        }
-
-        getByName("androidMain") {
-            dependencies {
-                api(libs.google.firebase.auth)
-            }
+        androidMain.dependencies {
+            api(libs.google.firebase.auth)
         }
     }
 }

@@ -6,10 +6,11 @@ import dev.gitlive.firebase.FirebaseException
 import dev.gitlive.firebase.js
 import dev.gitlive.firebase.remoteconfig.externals.*
 import kotlinx.coroutines.await
-import kotlinx.datetime.Instant
 import kotlin.js.json
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 public actual val Firebase.remoteConfig: FirebaseRemoteConfig
     get() = rethrow { FirebaseRemoteConfig(getRemoteConfig()) }
@@ -18,12 +19,11 @@ public actual fun Firebase.remoteConfig(app: FirebaseApp): FirebaseRemoteConfig 
     FirebaseRemoteConfig(getRemoteConfig(app.js))
 }
 
-public val FirebaseRemoteConfig.js get() = js
-
-public actual class FirebaseRemoteConfig internal constructor(internal val js: RemoteConfig) {
+public actual class FirebaseRemoteConfig internal constructor(public val js: RemoteConfig) {
     public actual val all: Map<String, FirebaseRemoteConfigValue>
         get() = rethrow { getAllKeys().associateWith { getValue(it) } }
 
+    @OptIn(ExperimentalTime::class)
     public actual val info: FirebaseRemoteConfigInfo
         get() = rethrow {
             FirebaseRemoteConfigInfo(

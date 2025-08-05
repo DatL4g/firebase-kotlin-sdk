@@ -73,9 +73,7 @@ public actual fun Firebase.database(url: String): FirebaseDatabase =
 public actual fun Firebase.database(app: FirebaseApp, url: String): FirebaseDatabase =
     rethrow { FirebaseDatabase(getDatabase(app = app.js, url = url)) }
 
-public val FirebaseDatabase.js get() = js
-
-public actual class FirebaseDatabase internal constructor(internal val js: Database) {
+public actual class FirebaseDatabase internal constructor(public val js: Database) {
 
     public actual fun reference(path: String): DatabaseReference = rethrow { DatabaseReference(NativeDatabaseReference(ref(js, path), js)) }
     public actual fun reference(): DatabaseReference = rethrow { DatabaseReference(NativeDatabaseReference(ref(js), js)) }
@@ -201,10 +199,8 @@ internal actual class NativeDatabaseReference internal constructor(
     )
 }
 
-public val DataSnapshot.js: JsDataSnapshot get() = js
-
 public actual class DataSnapshot internal constructor(
-    internal val js: JsDataSnapshot,
+    public val js: JsDataSnapshot,
     public val database: Database,
 ) {
     public actual val value: Any? get() {

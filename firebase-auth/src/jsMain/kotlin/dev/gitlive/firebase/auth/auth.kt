@@ -44,9 +44,7 @@ public actual val Firebase.auth: FirebaseAuth
 public actual fun Firebase.auth(app: FirebaseApp): FirebaseAuth =
     rethrow { FirebaseAuth(getAuth(app.js)) }
 
-public val FirebaseAuth.js: Auth get() = js
-
-public actual class FirebaseAuth internal constructor(internal val js: Auth) {
+public actual class FirebaseAuth internal constructor(public val js: Auth) {
 
     public actual val currentUser: FirebaseUser?
         get() = rethrow { js.currentUser?.let { FirebaseUser(it) } }
@@ -133,9 +131,7 @@ public actual class FirebaseAuth internal constructor(internal val js: Auth) {
     public actual fun useEmulator(host: String, port: Int): Unit = rethrow { connectAuthEmulator(js, "http://$host:$port") }
 }
 
-public val AuthResult.js: JsAuthResult get() = js
-
-public actual class AuthResult(internal val js: JsAuthResult) {
+public actual class AuthResult(public val js: JsAuthResult) {
     public actual val user: FirebaseUser?
         get() = rethrow { js.user?.let { FirebaseUser(it) } }
     public actual val credential: AuthCredential?
@@ -144,10 +140,8 @@ public actual class AuthResult(internal val js: JsAuthResult) {
         get() = rethrow { js.additionalUserInfo?.let { AdditionalUserInfo(it) } }
 }
 
-public val AdditionalUserInfo.js: JsAdditionalUserInfo get() = js
-
 public actual class AdditionalUserInfo(
-    internal val js: JsAdditionalUserInfo,
+    public val js: JsAdditionalUserInfo,
 ) {
     public actual val providerId: String?
         get() = js.providerId
@@ -165,9 +159,7 @@ public actual class AdditionalUserInfo(
         get() = js.newUser
 }
 
-public val AuthTokenResult.js: IdTokenResult get() = js
-
-public actual class AuthTokenResult(internal val js: IdTokenResult) {
+public actual class AuthTokenResult(public val js: IdTokenResult) {
 //    actual val authTimestamp: Long
 //        get() = js.authTime
     public actual val claims: Map<String, Any>

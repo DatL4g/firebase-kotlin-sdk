@@ -9,7 +9,6 @@ import dev.gitlive.firebase.FirebaseOptions
 import dev.gitlive.firebase.apps
 import dev.gitlive.firebase.initialize
 import dev.gitlive.firebase.runTest
-import kotlinx.datetime.Instant
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Ignore
@@ -17,6 +16,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 expect val context: Any
 expect annotation class IgnoreForAndroidUnitTest()
@@ -99,6 +100,7 @@ class FirebaseRemoteConfigTest {
         )
     }
 
+    @OptIn(ExperimentalTime::class)
     @Test
     fun testGetInfo() = runTest {
         assertEquals(

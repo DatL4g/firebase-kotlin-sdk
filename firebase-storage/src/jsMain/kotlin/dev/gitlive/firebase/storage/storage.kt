@@ -30,9 +30,7 @@ public actual fun Firebase.storage(app: FirebaseApp): FirebaseStorage = Firebase
 
 public actual fun Firebase.storage(app: FirebaseApp, url: String): FirebaseStorage = FirebaseStorage(getStorage(app.js, url))
 
-public val FirebaseStorage.js get() = js
-
-public actual class FirebaseStorage(internal val js: dev.gitlive.firebase.storage.externals.FirebaseStorage) {
+public actual class FirebaseStorage(public val js: dev.gitlive.firebase.storage.externals.FirebaseStorage) {
     public actual val maxOperationRetryTime: Duration = js.maxOperationRetryTime.milliseconds
     public actual val maxUploadRetryTime: Duration = js.maxUploadRetryTime.milliseconds
 
@@ -55,9 +53,7 @@ public actual class FirebaseStorage(internal val js: dev.gitlive.firebase.storag
     public actual fun getReferenceFromUrl(fullUrl: String): StorageReference = rethrow { StorageReference(ref(js, fullUrl)) }
 }
 
-public val StorageReference.js get() = js
-
-public actual class StorageReference(internal val js: dev.gitlive.firebase.storage.externals.StorageReference) {
+public actual class StorageReference(public val js: dev.gitlive.firebase.storage.externals.StorageReference) {
     public actual val path: String get() = js.fullPath
     public actual val name: String get() = js.name
     public actual val bucket: String get() = js.bucket

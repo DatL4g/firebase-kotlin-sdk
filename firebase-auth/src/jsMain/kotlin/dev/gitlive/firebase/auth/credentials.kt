@@ -12,9 +12,7 @@ import kotlin.js.json
 import dev.gitlive.firebase.auth.externals.AuthCredential as JsAuthCredential
 import dev.gitlive.firebase.auth.externals.OAuthProvider as JsOAuthProvider
 
-public val AuthCredential.js: JsAuthCredential get() = js
-
-public actual open class AuthCredential(internal val js: JsAuthCredential) {
+public actual open class AuthCredential(public val js: JsAuthCredential) {
     public actual val providerId: String
         get() = js.providerId
 }
@@ -51,9 +49,7 @@ public actual object GoogleAuthProvider {
     }
 }
 
-public val OAuthProvider.js: JsOAuthProvider get() = js
-
-public actual class OAuthProvider(internal val js: JsOAuthProvider) {
+public actual class OAuthProvider(public val js: JsOAuthProvider) {
 
     public actual constructor(
         provider: String,
@@ -82,9 +78,7 @@ public actual class OAuthProvider(internal val js: JsOAuthProvider) {
     }
 }
 
-public val PhoneAuthProvider.js: JsPhoneAuthProvider get() = js
-
-public actual class PhoneAuthProvider(internal val js: JsPhoneAuthProvider) {
+public actual class PhoneAuthProvider(public val js: JsPhoneAuthProvider) {
 
     public actual constructor(auth: FirebaseAuth) : this(JsPhoneAuthProvider(auth.js))
 

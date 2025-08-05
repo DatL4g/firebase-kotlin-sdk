@@ -14,12 +14,13 @@ import dev.gitlive.firebase.FirebaseException
 import dev.gitlive.firebase.app
 import dev.gitlive.firebase.ios
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.datetime.Instant
 import kotlinx.datetime.toKotlinInstant
 import platform.Foundation.NSError
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 public val FirebaseRemoteConfig.ios: FIRRemoteConfig get() = FIRRemoteConfig.remoteConfig()
 
@@ -44,6 +45,7 @@ public actual class FirebaseRemoteConfig internal constructor(internal val ios: 
             }.flatten().toMap()
         }
 
+    @OptIn(ExperimentalTime::class)
     public actual val info: FirebaseRemoteConfigInfo
         get() {
             return FirebaseRemoteConfigInfo(
