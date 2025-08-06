@@ -123,7 +123,7 @@ kotlin {
         }
 
         jsMain.dependencies {
-            api(npm("firebase", "10.12.2"))
+            api(npm("firebase", "12.0.0"))
         }
 
         val jvmMain by getting {
