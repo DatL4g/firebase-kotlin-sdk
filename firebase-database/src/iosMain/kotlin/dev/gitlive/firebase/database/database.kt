@@ -29,7 +29,6 @@ import dev.gitlive.firebase.internal.EncodedObject
 import dev.gitlive.firebase.internal.decode
 import dev.gitlive.firebase.internal.ios
 import dev.gitlive.firebase.internal.reencodeTransformation
-import dev.gitlive.firebase.ios
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.awaitClose
@@ -44,8 +43,6 @@ import kotlinx.serialization.KSerializer
 import platform.Foundation.NSError
 import platform.Foundation.allObjects
 
-public val FirebaseDatabase.ios: FIRDatabase get() = FIRDatabase.database()
-
 public actual val Firebase.database: FirebaseDatabase
     by lazy { FirebaseDatabase(FIRDatabase.database()) }
 
@@ -59,7 +56,7 @@ public actual fun Firebase.database(app: FirebaseApp, url: String): FirebaseData
     FIRDatabase.databaseForApp(app.ios as objcnames.classes.FIRApp, url),
 )
 
-public actual class FirebaseDatabase internal constructor(internal val ios: FIRDatabase) {
+public actual class FirebaseDatabase internal constructor(public val ios: FIRDatabase) {
 
     public actual fun reference(path: String): DatabaseReference = DatabaseReference(NativeDatabaseReference(ios.referenceWithPath(path), ios.persistenceEnabled))
 
@@ -102,15 +99,13 @@ internal actual open class NativeQuery(
     val persistenceEnabled: Boolean,
 )
 
-public val Query.ios: FIRDatabaseQuery get() = nativeQuery.ios
-
 public actual open class Query internal actual constructor(
     internal val nativeQuery: NativeQuery,
 ) {
 
     internal constructor(ios: FIRDatabaseQuery, persistenceEnabled: Boolean) : this(NativeQuery(ios, persistenceEnabled))
 
-    internal open val ios: FIRDatabaseQuery = nativeQuery.ios
+    public open val ios: FIRDatabaseQuery = nativeQuery.ios
     public val persistenceEnabled: Boolean = nativeQuery.persistenceEnabled
 
     public actual fun orderByKey(): Query = Query(ios.queryOrderedByKey(), persistenceEnabled)
@@ -212,11 +207,8 @@ internal actual class NativeDatabaseReference internal constructor(
     }
 }
 
-public val DatabaseReference.ios: FIRDatabaseReference get() = nativeReference.ios
-public val DataSnapshot.ios: FIRDataSnapshot get() = ios
-
 public actual class DataSnapshot internal constructor(
-    internal val ios: FIRDataSnapshot,
+    public val ios: FIRDataSnapshot,
     private val persistenceEnabled: Boolean,
 ) {
 
@@ -228,9 +220,9 @@ public actual class DataSnapshot internal constructor(
 
     public actual val value: Any? get() = ios.value
 
-    public actual inline fun <reified T> value(): T = decode<T>(value = publicIos.value)
+    public actual inline fun <reified T> value(): T = decode<T>(value = ios.value)
 
-    public actual inline fun <T> value(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T = decode(strategy, publicIos.value, buildSettings)
+    public actual inline fun <T> value(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T = decode(strategy, ios.value, buildSettings)
 
     public actual fun child(path: String): DataSnapshot = DataSnapshot(ios.childSnapshotForPath(path), persistenceEnabled)
     public actual val hasChildren: Boolean get() = ios.hasChildren()
