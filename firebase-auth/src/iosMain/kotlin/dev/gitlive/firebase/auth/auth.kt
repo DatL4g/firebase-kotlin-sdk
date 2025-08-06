@@ -145,7 +145,6 @@ public actual class AuthTokenResult(public val ios: FIRAuthTokenResult) {
 internal fun ActionCodeSettings.toIos() = FIRActionCodeSettings().also {
     it.setURL(NSURL.URLWithString(url))
     androidPackageName?.run { it.setAndroidPackageName(packageName, installIfNotAvailable, minimumVersion) }
-    it.setDynamicLinkDomain(dynamicLinkDomain)
     it.setHandleCodeInApp(canHandleCodeInApp)
     iOSBundleId?.run { it.setIOSBundleID(this) }
 }

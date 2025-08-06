@@ -27,7 +27,17 @@ public actual data class FirebaseApp internal constructor(public val ios: FIRApp
     actual val name: String
         get() = ios.name
     actual val options: FirebaseOptions
-        get() = ios.options.run { FirebaseOptions(bundleID, APIKey!!, databaseURL!!, trackingID, storageBucket, projectID, GCMSenderID) }
+        get() = ios.options.run {
+            FirebaseOptions(
+                bundleID,
+                APIKey!!,
+                databaseURL,
+                null,
+                storageBucket,
+                projectID,
+                GCMSenderID
+            )
+        }
 
     public actual suspend fun delete() {
         val deleted = CompletableDeferred<Unit>()
@@ -44,7 +54,6 @@ public actual fun Firebase.apps(context: Any?): List<FirebaseApp> = FIRApp.allAp
 private fun FirebaseOptions.toIos() = FIROptions(this@toIos.applicationId, this@toIos.gcmSenderId ?: "").apply {
     APIKey = this@toIos.apiKey
     databaseURL = this@toIos.databaseUrl
-    trackingID = this@toIos.gaTrackingId
     storageBucket = this@toIos.storageBucket
     projectID = this@toIos.projectId
 }
