@@ -6,16 +6,17 @@ name: Publish
 on:
   release:
     types: [ prereleased, released ]
+  workflow_dispatch:
 
 env:
-  sonatypeUsername: ${{ secrets.SONATYPEUSERNAME }}
-  sonatypePassword: ${{ secrets.SONATYPEPASSWORD }}
-  ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_PRIVATE_KEY }}
-  ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.PASSPHRASE }}
+  ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+  ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+  ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY }}
+  ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
@@ -24,38 +25,40 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
+      - name: Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
       - name: Setup versions
         run: ./gradlew :updateVersions
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Publish Firebase Analytics
-        run: ./gradlew :firebase-analytics:publish
+        run: ./gradlew :firebase-analytics:publishToMavenCentral
       - name: Publish Firebase App
-        run: ./gradlew :firebase-app:publish
+        run: ./gradlew :firebase-app:publishToMavenCentral
       - name: Publish Firebase Auth
-        run: ./gradlew :firebase-auth:publish
+        run: ./gradlew :firebase-auth:publishToMavenCentral
       - name: Publish Firebase Common
-        run: ./gradlew :firebase-common:publish
+        run: ./gradlew :firebase-common:publishToMavenCentral
       - name: Publish Firebase Common Internal
-        run: ./gradlew :firebase-common-internal:publish
+        run: ./gradlew :firebase-common-internal:publishToMavenCentral
       - name: Publish Firebase Config
-        run: ./gradlew :firebase-config:publish
+        run: ./gradlew :firebase-config:publishToMavenCentral
       - name: Publish Firebase Database
-        run: ./gradlew :firebase-database:publish
+        run: ./gradlew :firebase-database:publishToMavenCentral
       - name: Publish Firebase Firestore
-        run: ./gradlew :firebase-firestore:publish
+        run: ./gradlew :firebase-firestore:publishToMavenCentral
       - name: Publish Firebase Functions
-        run: ./gradlew :firebase-functions:publish
+        run: ./gradlew :firebase-functions:publishToMavenCentral
       - name: Publish Firebase Messaging
-        run: ./gradlew :firebase-messaging:publish
+        run: ./gradlew :firebase-messaging:publishToMavenCentral
       - name: Publish Firebase Storage
-        run: ./gradlew :firebase-storage:publish
+        run: ./gradlew :firebase-storage:publishToMavenCentral
       - name: Publish Firebase Installations
-        run: ./gradlew :firebase-installations:publish
+        run: ./gradlew :firebase-installations:publishToMavenCentral
       - name: Publish Firebase Performance
-        run: ./gradlew :firebase-perf:publish
+        run: ./gradlew :firebase-perf:publishToMavenCentral
       - name: Publish Firebase Crashlytics
-        run: ./gradlew :firebase-crashlytics:publish
+        run: ./gradlew :firebase-crashlytics:publishToMavenCentral
   documentation:
     runs-on: macos-13
     steps:
