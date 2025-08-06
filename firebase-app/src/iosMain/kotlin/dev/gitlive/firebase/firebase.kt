@@ -35,7 +35,7 @@ public actual data class FirebaseApp internal constructor(public val ios: FIRApp
                 null,
                 storageBucket,
                 projectID,
-                GCMSenderID
+                GCMSenderID,
             )
         }
 
