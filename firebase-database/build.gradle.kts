@@ -1,3 +1,4 @@
+import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
@@ -14,7 +15,29 @@ plugins {
     alias(libs.plugins.native.cocoapods)
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.dokka)
     id("testOptionsConvention")
+}
+
+dokka {
+    dokkaSourceSets {
+        configureEach {
+            documentedVisibilities.set(setOf(VisibilityModifier.Public))
+            includes.setFrom("documentation.md")
+
+            sourceLink {
+                localDirectory.set(file("src"))
+                remoteUrl("https://github.com/DatL4g/firebase-kotlin-sdk/tree/master/${project.name}/src")
+            }
+            if (this.name == "jsMain") {
+                perPackageOption {
+                    // External files for JS should not be documented since they will not be available
+                    matchingRegex.set(".*.externals.*")
+                    suppress.set(true)
+                }
+            }
+        }
+    }
 }
 
 android {
