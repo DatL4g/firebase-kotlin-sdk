@@ -88,6 +88,7 @@ public data class FirebaseOptions(
     /**
      * The tracking ID for Google Analytics, e.g. UA-12345678-1, used to configure Google Analytics.
      */
+    @Deprecated("Unused in underlying Firebase SDK")
     val gaTrackingId: String? = null,
 
     /** The Google Cloud Storage bucket name, e.g. abc-xyz-123.storage.firebase.com. */

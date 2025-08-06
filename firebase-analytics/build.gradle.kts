@@ -15,6 +15,9 @@ plugins {
     alias(libs.plugins.native.cocoapods)
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.dokka)
+    alias(libs.plugins.publish)
+    `maven-publish`
+    signing
     id("testOptionsConvention")
 }
 
@@ -175,9 +178,47 @@ if (project.property("firebase-analytics.skipJsTests") == "true") {
     }
 }
 
-signing {
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications)
+mavenPublishing {
+    publishToMavenCentral(automaticRelease = true)
+    signAllPublications()
+
+    pom {
+        name.set("firebase-kotlin-sdk")
+        description.set("The Firebase Kotlin SDK is a Kotlin-first SDK for Firebase. It's API is similar to the Firebase Android SDK Kotlin Extensions but also supports multiplatform projects, enabling you to use Firebase directly from your common source targeting iOS, Android or JS.")
+        url.set("https://github.com/DatL4g/firebase-kotlin-sdk")
+        inceptionYear.set("2019")
+
+        scm {
+            url.set("https://github.com/DatL4g/firebase-kotlin-sdk")
+            connection.set("scm:git:https://github.com/DatL4g/firebase-kotlin-sdk.git")
+            developerConnection.set("scm:git:https://github.com/DatL4g/firebase-kotlin-sdk.git")
+            tag.set("HEAD")
+        }
+
+        issueManagement {
+            system.set("GitHub Issues")
+            url.set("https://github.com/DatL4g/firebase-kotlin-sdk/issues")
+        }
+
+        developers {
+            developer {
+                name.set("Nicholas Bransby-Williams")
+                email.set("nbransby@gmail.com")
+            }
+            developer {
+                id.set("DatL4g")
+                name.set("Jeff Retz")
+                url.set("https://github.com/DatL4g")
+            }
+        }
+
+        licenses {
+            license {
+                name.set("The Apache Software License, Version 2.0")
+                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("repo")
+                comments.set("A business-friendly OSS license")
+            }
+        }
+    }
 }
