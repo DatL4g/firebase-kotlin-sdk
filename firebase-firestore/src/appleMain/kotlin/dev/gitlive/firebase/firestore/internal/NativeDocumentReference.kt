@@ -7,7 +7,7 @@ import dev.gitlive.firebase.firestore.await
 import dev.gitlive.firebase.firestore.awaitResult
 import dev.gitlive.firebase.firestore.toException
 import dev.gitlive.firebase.internal.EncodedObject
-import dev.gitlive.firebase.internal.ios
+import dev.gitlive.firebase.internal.apple
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 
@@ -15,35 +15,35 @@ internal actual class NativeDocumentReference actual constructor(actual val nati
 
     actual fun snapshots(includeMetadataChanges: Boolean) = callbackFlow {
         val listener =
-            ios.addSnapshotListenerWithIncludeMetadataChanges(includeMetadataChanges) { snapshot, error ->
+            apple.addSnapshotListenerWithIncludeMetadataChanges(includeMetadataChanges) { snapshot, error ->
                 snapshot?.let { trySend(snapshot) }
                 error?.let { close(error.toException()) }
             }
         awaitClose { listener.remove() }
     }
 
-    val ios: NativeDocumentReferenceType by ::nativeValue
+    val apple: NativeDocumentReferenceType by ::nativeValue
 
     actual val id: String
-        get() = ios.documentID
+        get() = apple.documentID
 
     actual val path: String
-        get() = ios.path
+        get() = apple.path
 
     actual val parent: NativeCollectionReferenceWrapper
-        get() = NativeCollectionReferenceWrapper(ios.parent)
+        get() = NativeCollectionReferenceWrapper(apple.parent)
 
-    actual fun collection(collectionPath: String) = ios.collectionWithPath(collectionPath)
+    actual fun collection(collectionPath: String) = apple.collectionWithPath(collectionPath)
 
-    actual suspend fun get(source: Source) = awaitResult { ios.getDocumentWithSource(source.toIosSource(), it) }
+    actual suspend fun get(source: Source) = awaitResult { apple.getDocumentWithSource(source.toIosSource(), it) }
 
     actual suspend fun setEncoded(encodedData: EncodedObject, setOptions: SetOptions) = await {
         when (setOptions) {
-            is SetOptions.Merge -> ios.setData(encodedData.ios, true, it)
-            is SetOptions.Overwrite -> ios.setData(encodedData.ios, false, it)
-            is SetOptions.MergeFields -> ios.setData(encodedData.ios, setOptions.fields, it)
-            is SetOptions.MergeFieldPaths -> ios.setData(
-                encodedData.ios,
+            is SetOptions.Merge -> apple.setData(encodedData.apple, true, it)
+            is SetOptions.Overwrite -> apple.setData(encodedData.apple, false, it)
+            is SetOptions.MergeFields -> apple.setData(encodedData.apple, setOptions.fields, it)
+            is SetOptions.MergeFieldPaths -> apple.setData(
+                encodedData.apple,
                 setOptions.encodedFieldPaths,
                 it,
             )
@@ -51,21 +51,21 @@ internal actual class NativeDocumentReference actual constructor(actual val nati
     }
 
     actual suspend fun updateEncoded(encodedData: EncodedObject) = await {
-        ios.updateData(encodedData.ios, it)
+        apple.updateData(encodedData.apple, it)
     }
 
     actual suspend fun updateEncodedFieldsAndValues(encodedFieldsAndValues: List<Pair<String, Any?>>) = await {
-        ios.updateData(encodedFieldsAndValues.toMap(), it)
+        apple.updateData(encodedFieldsAndValues.toMap(), it)
     }
 
     actual suspend fun updateEncodedFieldPathsAndValues(encodedFieldsAndValues: List<Pair<EncodedFieldPath, Any?>>) = await {
-        ios.updateData(encodedFieldsAndValues.toMap(), it)
+        apple.updateData(encodedFieldsAndValues.toMap(), it)
     }
 
-    actual suspend fun delete() = await { ios.deleteDocumentWithCompletion(it) }
+    actual suspend fun delete() = await { apple.deleteDocumentWithCompletion(it) }
 
     actual val snapshots get() = callbackFlow {
-        val listener = ios.addSnapshotListener { snapshot, error ->
+        val listener = apple.addSnapshotListener { snapshot, error ->
             snapshot?.let { trySend(snapshot) }
             error?.let { close(error.toException()) }
         }

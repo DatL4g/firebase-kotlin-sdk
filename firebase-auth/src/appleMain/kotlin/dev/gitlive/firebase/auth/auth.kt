@@ -5,29 +5,23 @@
 package dev.gitlive.firebase.auth
 
 import cocoapods.FirebaseAuth.*
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.FirebaseApp
 import dev.gitlive.firebase.FirebaseException
 import dev.gitlive.firebase.FirebaseNetworkException
-import dev.gitlive.firebase.auth.ActionCodeResult.*
 import kotlinx.cinterop.*
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.Flow
 import platform.Foundation.NSError
 import platform.Foundation.NSString
 import platform.Foundation.NSURL
 
 public actual class AdditionalUserInfo(
-    public val ios: FIRAdditionalUserInfo,
+    public val apple: FIRAdditionalUserInfo,
 ) {
     public actual val providerId: String?
-        get() = ios.providerID()
+        get() = apple.providerID()
     public actual val username: String?
-        get() = ios.username()
+        get() = apple.username()
     public actual val profile: Map<String, Any?>?
-        get() = ios.profile()
+        get() = apple.profile()
             ?.mapNotNull { (key, value) ->
                 if (key is NSString && value != null) {
                     key.toString() to value
@@ -37,23 +31,23 @@ public actual class AdditionalUserInfo(
             }
             ?.toMap()
     public actual val isNewUser: Boolean
-        get() = ios.newUser()
+        get() = apple.newUser()
 }
 
-public actual class AuthTokenResult(public val ios: FIRAuthTokenResult) {
+public actual class AuthTokenResult(public val apple: FIRAuthTokenResult) {
 //    actual val authTimestamp: Long
 //        get() = ios.authDate
     public actual val claims: Map<String, Any>
-        get() = ios.claims().map { it.key.toString() to it.value as Any }.toMap()
+        get() = apple.claims().map { it.key.toString() to it.value as Any }.toMap()
 
 //    actual val expirationTimestamp: Long
 //        get() = ios.expirationDate
 //    actual val issuedAtTimestamp: Long
 //        get() = ios.issuedAtDate
     public actual val signInProvider: String?
-        get() = ios.signInProvider()
+        get() = apple.signInProvider()
     public actual val token: String?
-        get() = ios.token()
+        get() = apple.token()
 }
 
 internal fun ActionCodeSettings.toIos() = FIRActionCodeSettings().also {

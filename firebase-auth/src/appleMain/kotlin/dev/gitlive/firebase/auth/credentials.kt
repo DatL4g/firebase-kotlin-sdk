@@ -6,13 +6,13 @@ package dev.gitlive.firebase.auth
 
 import cocoapods.FirebaseAuth.*
 
-public actual open class AuthCredential(public open val ios: FIRAuthCredential) {
+public actual open class AuthCredential(public open val apple: FIRAuthCredential) {
     public actual val providerId: String
-        get() = ios.provider()
+        get() = apple.provider()
 }
 
-public actual class PhoneAuthCredential(override val ios: FIRPhoneAuthCredential) : AuthCredential(ios)
-public actual class OAuthCredential(override val ios: FIROAuthCredential) : AuthCredential(ios)
+public actual class PhoneAuthCredential(override val apple: FIRPhoneAuthCredential) : AuthCredential(apple)
+public actual class OAuthCredential(override val apple: FIROAuthCredential) : AuthCredential(apple)
 
 public actual object EmailAuthProvider {
     public actual fun credential(

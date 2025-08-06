@@ -5,67 +5,67 @@ import cocoapods.FirebaseAuth.FIRUser
 import cocoapods.FirebaseAuth.FIRUserInfoProtocol
 import platform.Foundation.NSURL
 
-public actual class FirebaseUser internal constructor(public val ios: FIRUser) {
+public actual class FirebaseUser internal constructor(public val macos: FIRUser) {
     public actual val uid: String
-        get() = ios.uid()
+        get() = macos.uid()
     public actual val displayName: String?
-        get() = ios.displayName()
+        get() = macos.displayName()
     public actual val email: String?
-        get() = ios.email()
+        get() = macos.email()
     public actual val phoneNumber: String?
-        get() = ios.phoneNumber()
+        get() = macos.phoneNumber()
     public actual val photoURL: String?
-        get() = ios.photoURL()?.absoluteString
+        get() = macos.photoURL()?.absoluteString
     public actual val isAnonymous: Boolean
-        get() = ios.anonymous()
+        get() = macos.anonymous()
     public actual val isEmailVerified: Boolean
-        get() = ios.emailVerified()
+        get() = macos.emailVerified()
     public actual val metaData: UserMetaData?
-        get() = UserMetaData(ios.metadata())
+        get() = UserMetaData(macos.metadata())
     public actual val multiFactor: MultiFactor
         get() = MultiFactor()
     public actual val providerData: List<UserInfo>
-        get() = ios.providerData().mapNotNull { provider -> (provider as? FIRUserInfoProtocol)?.let { UserInfo(it) } }
+        get() = macos.providerData().mapNotNull { provider -> (provider as? FIRUserInfoProtocol)?.let { UserInfo(it) } }
     public actual val providerId: String
-        get() = ios.providerID()
+        get() = macos.providerID()
 
-    public actual suspend fun delete(): Unit = ios.await { deleteWithCompletion(it) }
+    public actual suspend fun delete(): Unit = macos.await { deleteWithCompletion(it) }
 
-    public actual suspend fun reload(): Unit = ios.await { reloadWithCompletion(it) }
+    public actual suspend fun reload(): Unit = macos.await { reloadWithCompletion(it) }
 
-    public actual suspend fun getIdToken(forceRefresh: Boolean): String? = ios.awaitResult { getIDTokenForcingRefresh(forceRefresh, it) }
+    public actual suspend fun getIdToken(forceRefresh: Boolean): String? = macos.awaitResult { getIDTokenForcingRefresh(forceRefresh, it) }
 
-    public actual suspend fun getIdTokenResult(forceRefresh: Boolean): AuthTokenResult = AuthTokenResult(ios.awaitResult { getIDTokenResultForcingRefresh(forceRefresh, it) })
+    public actual suspend fun getIdTokenResult(forceRefresh: Boolean): AuthTokenResult = AuthTokenResult(macos.awaitResult { getIDTokenResultForcingRefresh(forceRefresh, it) })
 
-    public actual suspend fun linkWithCredential(credential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { linkWithCredential(credential.ios, it) })
+    public actual suspend fun linkWithCredential(credential: AuthCredential): AuthResult = AuthResult(macos.awaitResult { linkWithCredential(credential.apple, it) })
 
     public actual suspend fun reauthenticate(credential: AuthCredential) {
-        ios.awaitResult<FIRUser, FIRAuthDataResult?> { reauthenticateWithCredential(credential.ios, it) }
+        macos.awaitResult<FIRUser, FIRAuthDataResult?> { reauthenticateWithCredential(credential.apple, it) }
     }
 
-    public actual suspend fun reauthenticateAndRetrieveData(credential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { reauthenticateWithCredential(credential.ios, it) })
+    public actual suspend fun reauthenticateAndRetrieveData(credential: AuthCredential): AuthResult = AuthResult(macos.awaitResult { reauthenticateWithCredential(credential.apple, it) })
 
-    public actual suspend fun sendEmailVerification(actionCodeSettings: ActionCodeSettings?): Unit = ios.await {
+    public actual suspend fun sendEmailVerification(actionCodeSettings: ActionCodeSettings?): Unit = macos.await {
         actionCodeSettings?.let { settings -> sendEmailVerificationWithActionCodeSettings(settings.toIos(), it) }
             ?: sendEmailVerificationWithCompletion(it)
     }
 
     public actual suspend fun unlink(provider: String): FirebaseUser? {
-        val user: FIRUser? = ios.awaitResult { unlinkFromProvider(provider, it) }
+        val user: FIRUser? = macos.awaitResult { unlinkFromProvider(provider, it) }
         return user?.let {
             FirebaseUser(it)
         }
     }
-    public actual suspend fun updateEmail(email: String): Unit = ios.await { updateEmail(email, it) }
-    public actual suspend fun updatePassword(password: String): Unit = ios.await { updatePassword(password, it) }
+    public actual suspend fun updateEmail(email: String): Unit = macos.await { updateEmail(email, it) }
+    public actual suspend fun updatePassword(password: String): Unit = macos.await { updatePassword(password, it) }
     public actual suspend fun updatePhoneNumber(credential: PhoneAuthCredential): Unit = error("PhoneAuthCredential not supported on macos")
     public actual suspend fun updateProfile(displayName: String?, photoUrl: String?) {
-        val request = ios.profileChangeRequest()
+        val request = macos.profileChangeRequest()
             .apply { setDisplayName(displayName) }
             .apply { setPhotoURL(photoUrl?.let { NSURL.URLWithString(it) }) }
-        ios.await { request.commitChangesWithCompletion(it) }
+        macos.await { request.commitChangesWithCompletion(it) }
     }
-    public actual suspend fun verifyBeforeUpdateEmail(newEmail: String, actionCodeSettings: ActionCodeSettings?): Unit = ios.await {
+    public actual suspend fun verifyBeforeUpdateEmail(newEmail: String, actionCodeSettings: ActionCodeSettings?): Unit = macos.await {
         actionCodeSettings?.let { actionSettings -> sendEmailVerificationBeforeUpdatingEmail(newEmail, actionSettings.toIos(), it) } ?: sendEmailVerificationBeforeUpdatingEmail(newEmail, it)
     }
 }

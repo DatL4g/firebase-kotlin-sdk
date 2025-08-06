@@ -15,39 +15,39 @@ public actual val Firebase.analytics: FirebaseAnalytics
 
 public actual fun Firebase.analytics(app: FirebaseApp): FirebaseAnalytics = FirebaseAnalytics(FIRAnalytics)
 
-public actual class FirebaseAnalytics(public val ios: FIRAnalytics.Companion) {
+public actual class FirebaseAnalytics(public val apple: FIRAnalytics.Companion) {
     public actual fun logEvent(name: String, parameters: Map<String, Any>?) {
         val mappedParameters: Map<Any?, Any>? = parameters?.map { it.key to it.value }?.toMap()
-        ios.logEventWithName(name, mappedParameters)
+        apple.logEventWithName(name, mappedParameters)
     }
     public actual fun setUserProperty(name: String, value: String) {
-        ios.setUserPropertyString(value, name)
+        apple.setUserPropertyString(value, name)
     }
     public actual fun setUserId(id: String?) {
-        ios.setUserID(id)
+        apple.setUserID(id)
     }
     public actual fun resetAnalyticsData() {
-        ios.resetAnalyticsData()
+        apple.resetAnalyticsData()
     }
 
     public actual fun setAnalyticsCollectionEnabled(enabled: Boolean) {
-        ios.setAnalyticsCollectionEnabled(enabled)
+        apple.setAnalyticsCollectionEnabled(enabled)
     }
 
     public actual fun setSessionTimeoutInterval(sessionTimeoutInterval: Duration) {
-        ios.setSessionTimeoutInterval(sessionTimeoutInterval.toDouble(DurationUnit.SECONDS))
+        apple.setSessionTimeoutInterval(sessionTimeoutInterval.toDouble(DurationUnit.SECONDS))
     }
 
-    public actual suspend fun getSessionId(): Long? = ios.awaitResult { sessionIDWithCompletion(it) }
+    public actual suspend fun getSessionId(): Long? = apple.awaitResult { sessionIDWithCompletion(it) }
 
     public actual fun setDefaultEventParameters(parameters: Map<String, String>) {
         val mappedParameters: Map<Any?, String> = parameters.map { it.key to it.value }.toMap()
-        ios.setDefaultEventParameters(mappedParameters)
+        apple.setDefaultEventParameters(mappedParameters)
     }
 
     public actual fun setConsent(consentSettings: Map<ConsentType, ConsentStatus>) {
         val mappedConsentSettings: Map<Any?, *> = consentSettings.map { it.key.name to it.value.name }.toMap()
-        ios.setConsent(mappedConsentSettings)
+        apple.setConsent(mappedConsentSettings)
     }
 
     public actual enum class ConsentType {

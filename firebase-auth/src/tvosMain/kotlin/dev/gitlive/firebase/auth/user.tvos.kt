@@ -5,67 +5,67 @@ import cocoapods.FirebaseAuth.FIRUser
 import cocoapods.FirebaseAuth.FIRUserInfoProtocol
 import platform.Foundation.NSURL
 
-public actual class FirebaseUser internal constructor(public val ios: FIRUser) {
+public actual class FirebaseUser internal constructor(public val tvos: FIRUser) {
     public actual val uid: String
-        get() = ios.uid()
+        get() = tvos.uid()
     public actual val displayName: String?
-        get() = ios.displayName()
+        get() = tvos.displayName()
     public actual val email: String?
-        get() = ios.email()
+        get() = tvos.email()
     public actual val phoneNumber: String?
-        get() = ios.phoneNumber()
+        get() = tvos.phoneNumber()
     public actual val photoURL: String?
-        get() = ios.photoURL()?.absoluteString
+        get() = tvos.photoURL()?.absoluteString
     public actual val isAnonymous: Boolean
-        get() = ios.anonymous()
+        get() = tvos.anonymous()
     public actual val isEmailVerified: Boolean
-        get() = ios.emailVerified()
+        get() = tvos.emailVerified()
     public actual val metaData: UserMetaData?
-        get() = UserMetaData(ios.metadata())
+        get() = UserMetaData(tvos.metadata())
     public actual val multiFactor: MultiFactor
         get() = MultiFactor()
     public actual val providerData: List<UserInfo>
-        get() = ios.providerData().mapNotNull { provider -> (provider as? FIRUserInfoProtocol)?.let { UserInfo(it) } }
+        get() = tvos.providerData().mapNotNull { provider -> (provider as? FIRUserInfoProtocol)?.let { UserInfo(it) } }
     public actual val providerId: String
-        get() = ios.providerID()
+        get() = tvos.providerID()
 
-    public actual suspend fun delete(): Unit = ios.await { deleteWithCompletion(it) }
+    public actual suspend fun delete(): Unit = tvos.await { deleteWithCompletion(it) }
 
-    public actual suspend fun reload(): Unit = ios.await { reloadWithCompletion(it) }
+    public actual suspend fun reload(): Unit = tvos.await { reloadWithCompletion(it) }
 
-    public actual suspend fun getIdToken(forceRefresh: Boolean): String? = ios.awaitResult { getIDTokenForcingRefresh(forceRefresh, it) }
+    public actual suspend fun getIdToken(forceRefresh: Boolean): String? = tvos.awaitResult { getIDTokenForcingRefresh(forceRefresh, it) }
 
-    public actual suspend fun getIdTokenResult(forceRefresh: Boolean): AuthTokenResult = AuthTokenResult(ios.awaitResult { getIDTokenResultForcingRefresh(forceRefresh, it) })
+    public actual suspend fun getIdTokenResult(forceRefresh: Boolean): AuthTokenResult = AuthTokenResult(tvos.awaitResult { getIDTokenResultForcingRefresh(forceRefresh, it) })
 
-    public actual suspend fun linkWithCredential(credential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { linkWithCredential(credential.ios, it) })
+    public actual suspend fun linkWithCredential(credential: AuthCredential): AuthResult = AuthResult(tvos.awaitResult { linkWithCredential(credential.apple, it) })
 
     public actual suspend fun reauthenticate(credential: AuthCredential) {
-        ios.awaitResult<FIRUser, FIRAuthDataResult?> { reauthenticateWithCredential(credential.ios, it) }
+        tvos.awaitResult<FIRUser, FIRAuthDataResult?> { reauthenticateWithCredential(credential.apple, it) }
     }
 
-    public actual suspend fun reauthenticateAndRetrieveData(credential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { reauthenticateWithCredential(credential.ios, it) })
+    public actual suspend fun reauthenticateAndRetrieveData(credential: AuthCredential): AuthResult = AuthResult(tvos.awaitResult { reauthenticateWithCredential(credential.apple, it) })
 
-    public actual suspend fun sendEmailVerification(actionCodeSettings: ActionCodeSettings?): Unit = ios.await {
+    public actual suspend fun sendEmailVerification(actionCodeSettings: ActionCodeSettings?): Unit = tvos.await {
         actionCodeSettings?.let { settings -> sendEmailVerificationWithActionCodeSettings(settings.toIos(), it) }
             ?: sendEmailVerificationWithCompletion(it)
     }
 
     public actual suspend fun unlink(provider: String): FirebaseUser? {
-        val user: FIRUser? = ios.awaitResult { unlinkFromProvider(provider, it) }
+        val user: FIRUser? = tvos.awaitResult { unlinkFromProvider(provider, it) }
         return user?.let {
             FirebaseUser(it)
         }
     }
-    public actual suspend fun updateEmail(email: String): Unit = ios.await { updateEmail(email, it) }
-    public actual suspend fun updatePassword(password: String): Unit = ios.await { updatePassword(password, it) }
+    public actual suspend fun updateEmail(email: String): Unit = tvos.await { updateEmail(email, it) }
+    public actual suspend fun updatePassword(password: String): Unit = tvos.await { updatePassword(password, it) }
     public actual suspend fun updatePhoneNumber(credential: PhoneAuthCredential): Unit = error("PhoneAuthCredential not supported on tvos")
     public actual suspend fun updateProfile(displayName: String?, photoUrl: String?) {
-        val request = ios.profileChangeRequest()
+        val request = tvos.profileChangeRequest()
             .apply { setDisplayName(displayName) }
             .apply { setPhotoURL(photoUrl?.let { NSURL.URLWithString(it) }) }
-        ios.await { request.commitChangesWithCompletion(it) }
+        tvos.await { request.commitChangesWithCompletion(it) }
     }
-    public actual suspend fun verifyBeforeUpdateEmail(newEmail: String, actionCodeSettings: ActionCodeSettings?): Unit = ios.await {
+    public actual suspend fun verifyBeforeUpdateEmail(newEmail: String, actionCodeSettings: ActionCodeSettings?): Unit = tvos.await {
         actionCodeSettings?.let { actionSettings -> sendEmailVerificationBeforeUpdatingEmail(newEmail, actionSettings.toIos(), it) } ?: sendEmailVerificationBeforeUpdatingEmail(newEmail, it)
     }
 }

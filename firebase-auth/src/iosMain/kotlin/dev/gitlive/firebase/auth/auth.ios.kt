@@ -65,7 +65,7 @@ public actual class FirebaseAuth internal constructor(public val ios: FIRAuth) {
 
     public actual suspend fun signInAnonymously(): AuthResult = AuthResult(ios.awaitResult { signInAnonymouslyWithCompletion(it) })
 
-    public actual suspend fun signInWithCredential(authCredential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { signInWithCredential(authCredential.ios, it) })
+    public actual suspend fun signInWithCredential(authCredential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { signInWithCredential(authCredential.apple, it) })
 
     public actual suspend fun signInWithEmailLink(email: String, link: String): AuthResult = AuthResult(ios.awaitResult { signInWithEmail(email = email, link = link, completion = it) })
 
@@ -96,7 +96,7 @@ public actual val Firebase.auth: FirebaseAuth
     get() = FirebaseAuth(FIRAuth.auth())
 
 public actual fun Firebase.auth(app: FirebaseApp): FirebaseAuth = FirebaseAuth(
-    FIRAuth.authWithApp(app.ios as objcnames.classes.FIRApp),
+    FIRAuth.authWithApp(app.apple as objcnames.classes.FIRApp),
 )
 
 public actual class AuthResult(public val ios: FIRAuthDataResult) {

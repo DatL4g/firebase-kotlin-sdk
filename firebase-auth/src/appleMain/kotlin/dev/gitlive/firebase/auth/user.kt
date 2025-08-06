@@ -4,30 +4,27 @@
 
 package dev.gitlive.firebase.auth
 
-import cocoapods.FirebaseAuth.FIRAuthDataResult
-import cocoapods.FirebaseAuth.FIRUser
 import cocoapods.FirebaseAuth.FIRUserInfoProtocol
 import cocoapods.FirebaseAuth.FIRUserMetadata
-import platform.Foundation.NSURL
 
-public actual class UserInfo(public val ios: FIRUserInfoProtocol) {
+public actual class UserInfo(public val apple: FIRUserInfoProtocol) {
     public actual val displayName: String?
-        get() = ios.displayName()
+        get() = apple.displayName()
     public actual val email: String?
-        get() = ios.email()
+        get() = apple.email()
     public actual val phoneNumber: String?
-        get() = ios.phoneNumber()
+        get() = apple.phoneNumber()
     public actual val photoURL: String?
-        get() = ios.photoURL()?.absoluteString
+        get() = apple.photoURL()?.absoluteString
     public actual val providerId: String
-        get() = ios.providerID()
+        get() = apple.providerID()
     public actual val uid: String
-        get() = ios.uid()
+        get() = apple.uid()
 }
 
-public actual class UserMetaData(public val ios: FIRUserMetadata) {
+public actual class UserMetaData(public val apple: FIRUserMetadata) {
     public actual val creationTime: Double?
-        get() = ios.creationDate()?.timeIntervalSinceReferenceDate
+        get() = apple.creationDate()?.timeIntervalSinceReferenceDate
     public actual val lastSignInTime: Double?
-        get() = ios.lastSignInDate()?.timeIntervalSinceReferenceDate
+        get() = apple.lastSignInDate()?.timeIntervalSinceReferenceDate
 }

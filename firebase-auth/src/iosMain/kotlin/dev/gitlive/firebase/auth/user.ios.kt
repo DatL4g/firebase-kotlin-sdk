@@ -37,13 +37,13 @@ public actual class FirebaseUser internal constructor(public val ios: FIRUser) {
 
     public actual suspend fun getIdTokenResult(forceRefresh: Boolean): AuthTokenResult = AuthTokenResult(ios.awaitResult { getIDTokenResultForcingRefresh(forceRefresh, it) })
 
-    public actual suspend fun linkWithCredential(credential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { linkWithCredential(credential.ios, it) })
+    public actual suspend fun linkWithCredential(credential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { linkWithCredential(credential.apple, it) })
 
     public actual suspend fun reauthenticate(credential: AuthCredential) {
-        ios.awaitResult<FIRUser, FIRAuthDataResult?> { reauthenticateWithCredential(credential.ios, it) }
+        ios.awaitResult<FIRUser, FIRAuthDataResult?> { reauthenticateWithCredential(credential.apple, it) }
     }
 
-    public actual suspend fun reauthenticateAndRetrieveData(credential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { reauthenticateWithCredential(credential.ios, it) })
+    public actual suspend fun reauthenticateAndRetrieveData(credential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { reauthenticateWithCredential(credential.apple, it) })
 
     public actual suspend fun sendEmailVerification(actionCodeSettings: ActionCodeSettings?): Unit = ios.await {
         actionCodeSettings?.let { settings -> sendEmailVerificationWithActionCodeSettings(settings.toIos(), it) }
@@ -58,7 +58,7 @@ public actual class FirebaseUser internal constructor(public val ios: FIRUser) {
     }
     public actual suspend fun updateEmail(email: String): Unit = ios.await { updateEmail(email, it) }
     public actual suspend fun updatePassword(password: String): Unit = ios.await { updatePassword(password, it) }
-    public actual suspend fun updatePhoneNumber(credential: PhoneAuthCredential): Unit = ios.await { updatePhoneNumberCredential(credential.ios, it) }
+    public actual suspend fun updatePhoneNumber(credential: PhoneAuthCredential): Unit = ios.await { updatePhoneNumberCredential(credential.apple, it) }
     public actual suspend fun updateProfile(displayName: String?, photoUrl: String?) {
         val request = ios.profileChangeRequest()
             .apply { setDisplayName(displayName) }

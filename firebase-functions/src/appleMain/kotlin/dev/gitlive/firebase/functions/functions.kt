@@ -13,7 +13,6 @@ import dev.gitlive.firebase.DecodeSettings
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseApp
 import dev.gitlive.firebase.FirebaseException
-import dev.gitlive.firebase.functions.ios as publicIos
 import dev.gitlive.firebase.internal.decode
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.serialization.DeserializationStrategy
@@ -27,40 +26,39 @@ public actual val Firebase.functions: FirebaseFunctions
 public actual fun Firebase.functions(region: String): FirebaseFunctions = FirebaseFunctions(FIRFunctions.functionsForRegion(region))
 
 public actual fun Firebase.functions(app: FirebaseApp): FirebaseFunctions = FirebaseFunctions(
-    FIRFunctions.functionsForApp(app.ios as objcnames.classes.FIRApp),
+    FIRFunctions.functionsForApp(app.apple as objcnames.classes.FIRApp),
 )
 
 public actual fun Firebase.functions(
     app: FirebaseApp,
     region: String,
 ): FirebaseFunctions = FirebaseFunctions(
-    FIRFunctions.functionsForApp(app.ios as objcnames.classes.FIRApp, region = region),
+    FIRFunctions.functionsForApp(app.apple as objcnames.classes.FIRApp, region = region),
 )
 
-public actual data class FirebaseFunctions internal constructor(public val ios: FIRFunctions) {
-    public actual fun httpsCallable(name: String, timeout: Duration?): HttpsCallableReference = HttpsCallableReference(ios.HTTPSCallableWithName(name).apply { timeout?.let { setTimeoutInterval(it.toDouble(DurationUnit.SECONDS)) } }.native)
+public actual data class FirebaseFunctions internal constructor(public val apple: FIRFunctions) {
+    public actual fun httpsCallable(name: String, timeout: Duration?): HttpsCallableReference = HttpsCallableReference(apple.HTTPSCallableWithName(name).apply { timeout?.let { setTimeoutInterval(it.toDouble(DurationUnit.SECONDS)) } }.native)
 
     public actual fun useEmulator(host: String, port: Int) {
-        ios.useEmulatorWithHost(host, port.toLong())
+        apple.useEmulatorWithHost(host, port.toLong())
     }
 }
 
 @PublishedApi
-internal actual data class NativeHttpsCallableReference(val ios: FIRHTTPSCallable) {
-    actual suspend fun invoke(encodedData: Any): HttpsCallableResult = HttpsCallableResult(ios.awaitResult { callWithObject(encodedData, it) })
-    actual suspend fun invoke(): HttpsCallableResult = HttpsCallableResult(ios.awaitResult { callWithCompletion(it) })
+internal actual data class NativeHttpsCallableReference(val apple: FIRHTTPSCallable) {
+    actual suspend fun invoke(encodedData: Any): HttpsCallableResult = HttpsCallableResult(apple.awaitResult { callWithObject(encodedData, it) })
+    actual suspend fun invoke(): HttpsCallableResult = HttpsCallableResult(apple.awaitResult { callWithCompletion(it) })
 }
 
 internal val FIRHTTPSCallable.native get() = NativeHttpsCallableReference(this)
 
-internal val HttpsCallableReference.ios: FIRHTTPSCallable get() = native.ios
-public val HttpsCallableResult.ios: FIRHTTPSCallableResult get() = ios
+internal val HttpsCallableReference.apple: FIRHTTPSCallable get() = native.apple
 
-public actual class HttpsCallableResult(internal val ios: FIRHTTPSCallableResult) {
+public actual class HttpsCallableResult(public val apple: FIRHTTPSCallableResult) {
 
-    public actual inline fun <reified T> data(): T = decode<T>(value = publicIos.data())
+    public actual inline fun <reified T> data(): T = decode<T>(value = apple.data())
 
-    public actual inline fun <T> data(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T = decode(strategy, publicIos.data(), buildSettings)
+    public actual inline fun <T> data(strategy: DeserializationStrategy<T>, buildSettings: DecodeSettings.Builder.() -> Unit): T = decode(strategy, this@HttpsCallableResult.apple.data(), buildSettings)
 }
 
 public actual class FirebaseFunctionsException(message: String, public val code: FunctionsExceptionCode, public val details: Any?) : FirebaseException(message)

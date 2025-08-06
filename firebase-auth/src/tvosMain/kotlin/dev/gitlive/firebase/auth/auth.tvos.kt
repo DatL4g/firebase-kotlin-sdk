@@ -22,60 +22,60 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-public actual class FirebaseAuth internal constructor(public val ios: FIRAuth) {
+public actual class FirebaseAuth internal constructor(public val tvos: FIRAuth) {
 
     public actual val currentUser: FirebaseUser?
-        get() = ios.currentUser()?.let { FirebaseUser(it) }
+        get() = tvos.currentUser()?.let { FirebaseUser(it) }
 
     public actual val authStateChanged: Flow<FirebaseUser?> get() = callbackFlow {
-        val handle = ios.addAuthStateDidChangeListener { _, user -> trySend(user?.let { FirebaseUser(it) }) }
-        awaitClose { ios.removeAuthStateDidChangeListener(handle) }
+        val handle = tvos.addAuthStateDidChangeListener { _, user -> trySend(user?.let { FirebaseUser(it) }) }
+        awaitClose { tvos.removeAuthStateDidChangeListener(handle) }
     }
 
     public actual val idTokenChanged: Flow<FirebaseUser?> get() = callbackFlow {
-        val handle = ios.addIDTokenDidChangeListener { _, user -> trySend(user?.let { FirebaseUser(it) }) }
-        awaitClose { ios.removeIDTokenDidChangeListener(handle) }
+        val handle = tvos.addIDTokenDidChangeListener { _, user -> trySend(user?.let { FirebaseUser(it) }) }
+        awaitClose { tvos.removeIDTokenDidChangeListener(handle) }
     }
 
     public actual var languageCode: String
-        get() = ios.languageCode() ?: ""
+        get() = tvos.languageCode() ?: ""
         set(value) {
-            ios.setLanguageCode(value)
+            tvos.setLanguageCode(value)
         }
 
-    public actual suspend fun applyActionCode(code: String): Unit = ios.await { applyActionCode(code, it) }
-    public actual suspend fun confirmPasswordReset(code: String, newPassword: String): Unit = ios.await { confirmPasswordResetWithCode(code, newPassword, it) }
+    public actual suspend fun applyActionCode(code: String): Unit = tvos.await { applyActionCode(code, it) }
+    public actual suspend fun confirmPasswordReset(code: String, newPassword: String): Unit = tvos.await { confirmPasswordResetWithCode(code, newPassword, it) }
 
-    public actual suspend fun createUserWithEmailAndPassword(email: String, password: String): AuthResult = AuthResult(ios.awaitResult { createUserWithEmail(email = email, password = password, completion = it) })
+    public actual suspend fun createUserWithEmailAndPassword(email: String, password: String): AuthResult = AuthResult(tvos.awaitResult { createUserWithEmail(email = email, password = password, completion = it) })
 
     @Suppress("UNCHECKED_CAST")
-    public actual suspend fun fetchSignInMethodsForEmail(email: String): List<String> = ios.awaitResult<FIRAuth, List<*>?> { fetchSignInMethodsForEmail(email, it) }.orEmpty() as List<String>
+    public actual suspend fun fetchSignInMethodsForEmail(email: String): List<String> = tvos.awaitResult<FIRAuth, List<*>?> { fetchSignInMethodsForEmail(email, it) }.orEmpty() as List<String>
 
     public actual suspend fun sendPasswordResetEmail(email: String, actionCodeSettings: ActionCodeSettings?) {
-        ios.await { actionCodeSettings?.let { actionSettings -> sendPasswordResetWithEmail(email, actionSettings.toIos(), it) } ?: sendPasswordResetWithEmail(email = email, completion = it) }
+        tvos.await { actionCodeSettings?.let { actionSettings -> sendPasswordResetWithEmail(email, actionSettings.toIos(), it) } ?: sendPasswordResetWithEmail(email = email, completion = it) }
     }
 
-    public actual suspend fun sendSignInLinkToEmail(email: String, actionCodeSettings: ActionCodeSettings): Unit = ios.await { sendSignInLinkToEmail(email, actionCodeSettings.toIos(), it) }
+    public actual suspend fun sendSignInLinkToEmail(email: String, actionCodeSettings: ActionCodeSettings): Unit = tvos.await { sendSignInLinkToEmail(email, actionCodeSettings.toIos(), it) }
 
-    public actual fun isSignInWithEmailLink(link: String): Boolean = ios.isSignInWithEmailLink(link)
+    public actual fun isSignInWithEmailLink(link: String): Boolean = tvos.isSignInWithEmailLink(link)
 
-    public actual suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult = AuthResult(ios.awaitResult { signInWithEmail(email = email, password = password, completion = it) })
+    public actual suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult = AuthResult(tvos.awaitResult { signInWithEmail(email = email, password = password, completion = it) })
 
-    public actual suspend fun signInWithCustomToken(token: String): AuthResult = AuthResult(ios.awaitResult { signInWithCustomToken(token, it) })
+    public actual suspend fun signInWithCustomToken(token: String): AuthResult = AuthResult(tvos.awaitResult { signInWithCustomToken(token, it) })
 
-    public actual suspend fun signInAnonymously(): AuthResult = AuthResult(ios.awaitResult { signInAnonymouslyWithCompletion(it) })
+    public actual suspend fun signInAnonymously(): AuthResult = AuthResult(tvos.awaitResult { signInAnonymouslyWithCompletion(it) })
 
-    public actual suspend fun signInWithCredential(authCredential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { signInWithCredential(authCredential.ios, it) })
+    public actual suspend fun signInWithCredential(authCredential: AuthCredential): AuthResult = AuthResult(tvos.awaitResult { signInWithCredential(authCredential.apple, it) })
 
-    public actual suspend fun signInWithEmailLink(email: String, link: String): AuthResult = AuthResult(ios.awaitResult { signInWithEmail(email = email, link = link, completion = it) })
+    public actual suspend fun signInWithEmailLink(email: String, link: String): AuthResult = AuthResult(tvos.awaitResult { signInWithEmail(email = email, link = link, completion = it) })
 
-    public actual suspend fun signOut(): Unit = ios.throwError { signOut(it) }
+    public actual suspend fun signOut(): Unit = tvos.throwError { signOut(it) }
 
-    public actual suspend fun updateCurrentUser(user: FirebaseUser): Unit = ios.await { updateCurrentUser(user.ios, it) }
-    public actual suspend fun verifyPasswordResetCode(code: String): String = ios.awaitResult { verifyPasswordResetCode(code, it) }
+    public actual suspend fun updateCurrentUser(user: FirebaseUser): Unit = tvos.await { updateCurrentUser(user.tvos, it) }
+    public actual suspend fun verifyPasswordResetCode(code: String): String = tvos.awaitResult { verifyPasswordResetCode(code, it) }
 
     public actual suspend fun <T : ActionCodeResult> checkActionCode(code: String): T {
-        val result: FIRActionCodeInfo = ios.awaitResult { checkActionCode(code, it) }
+        val result: FIRActionCodeInfo = tvos.awaitResult { checkActionCode(code, it) }
         @Suppress("UNCHECKED_CAST")
         return when (result.operation()) {
             FIRActionCodeOperationEmailLink -> SignInWithEmailLink
@@ -89,21 +89,21 @@ public actual class FirebaseAuth internal constructor(public val ios: FIRAuth) {
         } as T
     }
 
-    public actual fun useEmulator(host: String, port: Int): Unit = ios.useEmulatorWithHost(host, port.toLong())
+    public actual fun useEmulator(host: String, port: Int): Unit = tvos.useEmulatorWithHost(host, port.toLong())
 }
 
 public actual val Firebase.auth: FirebaseAuth
     get() = FirebaseAuth(FIRAuth.auth())
 
 public actual fun Firebase.auth(app: FirebaseApp): FirebaseAuth = FirebaseAuth(
-    FIRAuth.authWithApp(app.ios as objcnames.classes.FIRApp),
+    FIRAuth.authWithApp(app.apple as objcnames.classes.FIRApp),
 )
 
-public actual class AuthResult(public val ios: FIRAuthDataResult) {
+public actual class AuthResult(public val tvos: FIRAuthDataResult) {
     public actual val user: FirebaseUser?
-        get() = FirebaseUser(ios.user())
+        get() = FirebaseUser(tvos.user())
     public actual val credential: AuthCredential?
-        get() = ios.credential()?.let { AuthCredential(it) }
+        get() = tvos.credential()?.let { AuthCredential(it) }
     public actual val additionalUserInfo: AdditionalUserInfo?
-        get() = ios.additionalUserInfo()?.let { AdditionalUserInfo(it) }
+        get() = tvos.additionalUserInfo()?.let { AdditionalUserInfo(it) }
 }

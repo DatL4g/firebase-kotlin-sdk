@@ -22,60 +22,60 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-public actual class FirebaseAuth internal constructor(public val ios: FIRAuth) {
+public actual class FirebaseAuth internal constructor(public val macos: FIRAuth) {
 
     public actual val currentUser: FirebaseUser?
-        get() = ios.currentUser()?.let { FirebaseUser(it) }
+        get() = macos.currentUser()?.let { FirebaseUser(it) }
 
     public actual val authStateChanged: Flow<FirebaseUser?> get() = callbackFlow {
-        val handle = ios.addAuthStateDidChangeListener { _, user -> trySend(user?.let { FirebaseUser(it) }) }
-        awaitClose { ios.removeAuthStateDidChangeListener(handle) }
+        val handle = macos.addAuthStateDidChangeListener { _, user -> trySend(user?.let { FirebaseUser(it) }) }
+        awaitClose { macos.removeAuthStateDidChangeListener(handle) }
     }
 
     public actual val idTokenChanged: Flow<FirebaseUser?> get() = callbackFlow {
-        val handle = ios.addIDTokenDidChangeListener { _, user -> trySend(user?.let { FirebaseUser(it) }) }
-        awaitClose { ios.removeIDTokenDidChangeListener(handle) }
+        val handle = macos.addIDTokenDidChangeListener { _, user -> trySend(user?.let { FirebaseUser(it) }) }
+        awaitClose { macos.removeIDTokenDidChangeListener(handle) }
     }
 
     public actual var languageCode: String
-        get() = ios.languageCode() ?: ""
+        get() = macos.languageCode() ?: ""
         set(value) {
-            ios.setLanguageCode(value)
+            macos.setLanguageCode(value)
         }
 
-    public actual suspend fun applyActionCode(code: String): Unit = ios.await { applyActionCode(code, it) }
-    public actual suspend fun confirmPasswordReset(code: String, newPassword: String): Unit = ios.await { confirmPasswordResetWithCode(code, newPassword, it) }
+    public actual suspend fun applyActionCode(code: String): Unit = macos.await { applyActionCode(code, it) }
+    public actual suspend fun confirmPasswordReset(code: String, newPassword: String): Unit = macos.await { confirmPasswordResetWithCode(code, newPassword, it) }
 
-    public actual suspend fun createUserWithEmailAndPassword(email: String, password: String): AuthResult = AuthResult(ios.awaitResult { createUserWithEmail(email = email, password = password, completion = it) })
+    public actual suspend fun createUserWithEmailAndPassword(email: String, password: String): AuthResult = AuthResult(macos.awaitResult { createUserWithEmail(email = email, password = password, completion = it) })
 
     @Suppress("UNCHECKED_CAST")
-    public actual suspend fun fetchSignInMethodsForEmail(email: String): List<String> = ios.awaitResult<FIRAuth, List<*>?> { fetchSignInMethodsForEmail(email, it) }.orEmpty() as List<String>
+    public actual suspend fun fetchSignInMethodsForEmail(email: String): List<String> = macos.awaitResult<FIRAuth, List<*>?> { fetchSignInMethodsForEmail(email, it) }.orEmpty() as List<String>
 
     public actual suspend fun sendPasswordResetEmail(email: String, actionCodeSettings: ActionCodeSettings?) {
-        ios.await { actionCodeSettings?.let { actionSettings -> sendPasswordResetWithEmail(email, actionSettings.toIos(), it) } ?: sendPasswordResetWithEmail(email = email, completion = it) }
+        macos.await { actionCodeSettings?.let { actionSettings -> sendPasswordResetWithEmail(email, actionSettings.toIos(), it) } ?: sendPasswordResetWithEmail(email = email, completion = it) }
     }
 
-    public actual suspend fun sendSignInLinkToEmail(email: String, actionCodeSettings: ActionCodeSettings): Unit = ios.await { sendSignInLinkToEmail(email, actionCodeSettings.toIos(), it) }
+    public actual suspend fun sendSignInLinkToEmail(email: String, actionCodeSettings: ActionCodeSettings): Unit = macos.await { sendSignInLinkToEmail(email, actionCodeSettings.toIos(), it) }
 
-    public actual fun isSignInWithEmailLink(link: String): Boolean = ios.isSignInWithEmailLink(link)
+    public actual fun isSignInWithEmailLink(link: String): Boolean = macos.isSignInWithEmailLink(link)
 
-    public actual suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult = AuthResult(ios.awaitResult { signInWithEmail(email = email, password = password, completion = it) })
+    public actual suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult = AuthResult(macos.awaitResult { signInWithEmail(email = email, password = password, completion = it) })
 
-    public actual suspend fun signInWithCustomToken(token: String): AuthResult = AuthResult(ios.awaitResult { signInWithCustomToken(token, it) })
+    public actual suspend fun signInWithCustomToken(token: String): AuthResult = AuthResult(macos.awaitResult { signInWithCustomToken(token, it) })
 
-    public actual suspend fun signInAnonymously(): AuthResult = AuthResult(ios.awaitResult { signInAnonymouslyWithCompletion(it) })
+    public actual suspend fun signInAnonymously(): AuthResult = AuthResult(macos.awaitResult { signInAnonymouslyWithCompletion(it) })
 
-    public actual suspend fun signInWithCredential(authCredential: AuthCredential): AuthResult = AuthResult(ios.awaitResult { signInWithCredential(authCredential.ios, it) })
+    public actual suspend fun signInWithCredential(authCredential: AuthCredential): AuthResult = AuthResult(macos.awaitResult { signInWithCredential(authCredential.apple, it) })
 
-    public actual suspend fun signInWithEmailLink(email: String, link: String): AuthResult = AuthResult(ios.awaitResult { signInWithEmail(email = email, link = link, completion = it) })
+    public actual suspend fun signInWithEmailLink(email: String, link: String): AuthResult = AuthResult(macos.awaitResult { signInWithEmail(email = email, link = link, completion = it) })
 
-    public actual suspend fun signOut(): Unit = ios.throwError { signOut(it) }
+    public actual suspend fun signOut(): Unit = macos.throwError { signOut(it) }
 
-    public actual suspend fun updateCurrentUser(user: FirebaseUser): Unit = ios.await { updateCurrentUser(user.ios, it) }
-    public actual suspend fun verifyPasswordResetCode(code: String): String = ios.awaitResult { verifyPasswordResetCode(code, it) }
+    public actual suspend fun updateCurrentUser(user: FirebaseUser): Unit = macos.await { updateCurrentUser(user.macos, it) }
+    public actual suspend fun verifyPasswordResetCode(code: String): String = macos.awaitResult { verifyPasswordResetCode(code, it) }
 
     public actual suspend fun <T : ActionCodeResult> checkActionCode(code: String): T {
-        val result: FIRActionCodeInfo = ios.awaitResult { checkActionCode(code, it) }
+        val result: FIRActionCodeInfo = macos.awaitResult { checkActionCode(code, it) }
         @Suppress("UNCHECKED_CAST")
         return when (result.operation()) {
             FIRActionCodeOperationEmailLink -> SignInWithEmailLink
@@ -89,21 +89,21 @@ public actual class FirebaseAuth internal constructor(public val ios: FIRAuth) {
         } as T
     }
 
-    public actual fun useEmulator(host: String, port: Int): Unit = ios.useEmulatorWithHost(host, port.toLong())
+    public actual fun useEmulator(host: String, port: Int): Unit = macos.useEmulatorWithHost(host, port.toLong())
 }
 
 public actual val Firebase.auth: FirebaseAuth
     get() = FirebaseAuth(FIRAuth.auth())
 
 public actual fun Firebase.auth(app: FirebaseApp): FirebaseAuth = FirebaseAuth(
-    FIRAuth.authWithApp(app.ios as objcnames.classes.FIRApp),
+    FIRAuth.authWithApp(app.apple as objcnames.classes.FIRApp),
 )
 
-public actual class AuthResult(public val ios: FIRAuthDataResult) {
+public actual class AuthResult(public val macos: FIRAuthDataResult) {
     public actual val user: FirebaseUser?
-        get() = FirebaseUser(ios.user())
+        get() = FirebaseUser(macos.user())
     public actual val credential: AuthCredential?
-        get() = ios.credential()?.let { AuthCredential(it) }
+        get() = macos.credential()?.let { AuthCredential(it) }
     public actual val additionalUserInfo: AdditionalUserInfo?
-        get() = ios.additionalUserInfo()?.let { AdditionalUserInfo(it) }
+        get() = macos.additionalUserInfo()?.let { AdditionalUserInfo(it) }
 }

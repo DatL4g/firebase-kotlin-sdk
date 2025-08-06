@@ -25,10 +25,10 @@ public actual val Firebase.remoteConfig: FirebaseRemoteConfig
     get() = FirebaseRemoteConfig(FIRRemoteConfig.remoteConfig())
 
 public actual fun Firebase.remoteConfig(app: FirebaseApp): FirebaseRemoteConfig = FirebaseRemoteConfig(
-    FIRRemoteConfig.remoteConfigWithApp(Firebase.app.ios as objcnames.classes.FIRApp),
+    FIRRemoteConfig.remoteConfigWithApp(Firebase.app.apple as objcnames.classes.FIRApp),
 )
 
-public actual class FirebaseRemoteConfig internal constructor(public val ios: FIRRemoteConfig) {
+public actual class FirebaseRemoteConfig internal constructor(public val apple: FIRRemoteConfig) {
     @Suppress("UNCHECKED_CAST")
     public actual val all: Map<String, FirebaseRemoteConfigValue>
         get() {
@@ -37,8 +37,8 @@ public actual class FirebaseRemoteConfig internal constructor(public val ios: FI
                 FIRRemoteConfigSource.FIRRemoteConfigSourceRemote,
                 FIRRemoteConfigSource.FIRRemoteConfigSourceDefault,
             ).map { source ->
-                val keys = ios.allKeysFromSource(source) as List<String>
-                keys.map { it to FirebaseRemoteConfigValue(ios.configValueForKey(it, source)) }
+                val keys = apple.allKeysFromSource(source) as List<String>
+                keys.map { it to FirebaseRemoteConfigValue(apple.configValueForKey(it, source)) }
             }.flatten().toMap()
         }
 
@@ -46,30 +46,30 @@ public actual class FirebaseRemoteConfig internal constructor(public val ios: FI
     public actual val info: FirebaseRemoteConfigInfo
         get() {
             return FirebaseRemoteConfigInfo(
-                configSettings = ios.configSettings.asCommon(),
-                fetchTime = ios.lastFetchTime?.toKotlinInstant()
+                configSettings = apple.configSettings.asCommon(),
+                fetchTime = apple.lastFetchTime?.toKotlinInstant()
                     ?.takeIf { it.toEpochMilliseconds() > 0 }
                     ?: Instant.fromEpochMilliseconds(-1),
-                lastFetchStatus = ios.lastFetchStatus.asCommon(),
+                lastFetchStatus = apple.lastFetchStatus.asCommon(),
             )
         }
 
-    public actual suspend fun activate(): Boolean = ios.awaitResult { activateWithCompletion(it) }
+    public actual suspend fun activate(): Boolean = apple.awaitResult { activateWithCompletion(it) }
 
-    public actual suspend fun ensureInitialized(): Unit = ios.await { ensureInitializedWithCompletionHandler(it) }
+    public actual suspend fun ensureInitialized(): Unit = apple.await { ensureInitializedWithCompletionHandler(it) }
 
     public actual suspend fun fetch(minimumFetchInterval: Duration?) {
         if (minimumFetchInterval != null) {
-            ios.awaitResult<FIRRemoteConfig, FIRRemoteConfigFetchStatus> {
+            apple.awaitResult<FIRRemoteConfig, FIRRemoteConfigFetchStatus> {
                 fetchWithExpirationDuration(minimumFetchInterval.toDouble(DurationUnit.SECONDS), it)
             }
         } else {
-            ios.awaitResult { fetchWithCompletionHandler(it) }
+            apple.awaitResult { fetchWithCompletionHandler(it) }
         }
     }
 
     public actual suspend fun fetchAndActivate(): Boolean {
-        val status: FIRRemoteConfigFetchAndActivateStatus = ios.awaitResult {
+        val status: FIRRemoteConfigFetchAndActivateStatus = apple.awaitResult {
             fetchAndActivateWithCompletionHandler(it)
         }
         return status == FIRRemoteConfigFetchAndActivateStatus.FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote
@@ -77,7 +77,7 @@ public actual class FirebaseRemoteConfig internal constructor(public val ios: FI
 
     public actual fun getKeysByPrefix(prefix: String): Set<String> = all.keys.filter { it.startsWith(prefix) }.toSet()
 
-    public actual fun getValue(key: String): FirebaseRemoteConfigValue = FirebaseRemoteConfigValue(ios.configValueForKey(key))
+    public actual fun getValue(key: String): FirebaseRemoteConfigValue = FirebaseRemoteConfigValue(apple.configValueForKey(key))
 
     public actual suspend fun reset() {
         // not implemented for iOS target
@@ -89,11 +89,11 @@ public actual class FirebaseRemoteConfig internal constructor(public val ios: FI
             minimumFetchInterval = settings.minimumFetchInterval.toDouble(DurationUnit.SECONDS)
             fetchTimeout = settings.fetchTimeout.toDouble(DurationUnit.SECONDS)
         }
-        ios.setConfigSettings(iosSettings)
+        apple.setConfigSettings(iosSettings)
     }
 
     public actual suspend fun setDefaults(vararg defaults: Pair<String, Any?>) {
-        ios.setDefaults(defaults.toMap())
+        apple.setDefaults(defaults.toMap())
     }
 
     private fun FIRRemoteConfigSettings.asCommon(): FirebaseRemoteConfigSettings = FirebaseRemoteConfigSettings(

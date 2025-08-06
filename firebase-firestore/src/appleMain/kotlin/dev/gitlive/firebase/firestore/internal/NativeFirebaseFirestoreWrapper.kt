@@ -22,7 +22,7 @@ internal actual class NativeFirebaseFirestoreWrapper internal actual constructor
     actual fun setLoggingEnabled(loggingEnabled: Boolean): Unit = FIRFirestore.enableLogging(loggingEnabled)
 
     actual fun applySettings(settings: FirebaseFirestoreSettings) {
-        native.settings = settings.ios
+        native.settings = settings.apple
     }
 
     actual suspend fun <T> runTransaction(func: suspend NativeTransaction.() -> T) = awaitResult<Any?> {

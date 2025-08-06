@@ -3,7 +3,7 @@ package dev.gitlive.firebase.firestore.internal
 import dev.gitlive.firebase.firestore.NativeCollectionReference
 import dev.gitlive.firebase.firestore.await
 import dev.gitlive.firebase.internal.EncodedObject
-import dev.gitlive.firebase.internal.ios
+import dev.gitlive.firebase.internal.apple
 
 internal actual class NativeCollectionReferenceWrapper internal actual constructor(actual override val native: NativeCollectionReference) : NativeQueryWrapper(native) {
 
@@ -16,5 +16,5 @@ internal actual class NativeCollectionReferenceWrapper internal actual construct
 
     actual fun document(documentPath: String) = NativeDocumentReference(native.documentWithPath(documentPath))
 
-    actual suspend fun addEncoded(data: EncodedObject) = NativeDocumentReference(await { native.addDocumentWithData(data.ios, it) })
+    actual suspend fun addEncoded(data: EncodedObject) = NativeDocumentReference(await { native.addDocumentWithData(data.apple, it) })
 }

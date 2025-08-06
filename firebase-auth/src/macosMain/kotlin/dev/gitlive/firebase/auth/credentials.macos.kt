@@ -3,9 +3,9 @@ package dev.gitlive.firebase.auth
 import cocoapods.FirebaseAuth.FIROAuthProvider
 import cocoapods.FirebaseAuth.FIRPhoneAuthProvider
 
-public actual class PhoneAuthProvider(public val ios: FIRPhoneAuthProvider) {
+public actual class PhoneAuthProvider(public val macos: FIRPhoneAuthProvider) {
 
-    public actual constructor(auth: FirebaseAuth) : this(ios = error("PhoneAuthProvider is not supported on macos"))
+    public actual constructor(auth: FirebaseAuth) : this(macos = error("PhoneAuthProvider is not supported on macos"))
 
     public actual fun credential(verificationId: String, smsCode: String): PhoneAuthCredential = error("PhoneAuthProvider is not supported on macos")
 
@@ -19,17 +19,17 @@ public actual interface PhoneVerificationProvider {
     public suspend fun getVerificationCode(): String
 }
 
-public actual class OAuthProvider(public val ios: FIROAuthProvider) {
+public actual class OAuthProvider(public val macos: FIROAuthProvider) {
 
     public actual constructor(
         provider: String,
         scopes: List<String>,
         customParameters: Map<String, String>,
         auth: FirebaseAuth,
-    ) : this(FIROAuthProvider.providerWithProviderID(provider, auth.ios)) {
-        ios.setScopes(scopes)
+    ) : this(FIROAuthProvider.providerWithProviderID(provider, auth.macos)) {
+        macos.setScopes(scopes)
         @Suppress("UNCHECKED_CAST")
-        ios.setCustomParameters(customParameters as Map<Any?, *>)
+        macos.setCustomParameters(customParameters as Map<Any?, *>)
     }
 
     public actual companion object {

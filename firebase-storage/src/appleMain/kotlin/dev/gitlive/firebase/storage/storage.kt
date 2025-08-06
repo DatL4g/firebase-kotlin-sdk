@@ -38,47 +38,47 @@ public actual fun Firebase.storage(url: String): FirebaseStorage = FirebaseStora
 )
 
 public actual fun Firebase.storage(app: FirebaseApp): FirebaseStorage = FirebaseStorage(
-    FIRStorage.storageForApp(app.ios as objcnames.classes.FIRApp),
+    FIRStorage.storageForApp(app.apple as objcnames.classes.FIRApp),
 )
 
 public actual fun Firebase.storage(app: FirebaseApp, url: String): FirebaseStorage = FirebaseStorage(
-    FIRStorage.storageForApp(app.ios as objcnames.classes.FIRApp, url),
+    FIRStorage.storageForApp(app.apple as objcnames.classes.FIRApp, url),
 )
 
-public actual class FirebaseStorage(public val ios: FIRStorage) {
-    public actual val maxOperationRetryTime: Duration = ios.maxOperationRetryTime().seconds
-    public actual val maxUploadRetryTime: Duration = ios.maxUploadRetryTime().seconds
+public actual class FirebaseStorage(public val apple: FIRStorage) {
+    public actual val maxOperationRetryTime: Duration = apple.maxOperationRetryTime().seconds
+    public actual val maxUploadRetryTime: Duration = apple.maxUploadRetryTime().seconds
 
     public actual fun setMaxOperationRetryTime(maxOperationRetryTime: Duration) {
-        ios.setMaxOperationRetryTime(maxOperationRetryTime.toDouble(DurationUnit.SECONDS))
+        apple.setMaxOperationRetryTime(maxOperationRetryTime.toDouble(DurationUnit.SECONDS))
     }
 
     public actual fun setMaxUploadRetryTime(maxUploadRetryTime: Duration) {
-        ios.setMaxUploadRetryTime(maxUploadRetryTime.toDouble(DurationUnit.SECONDS))
+        apple.setMaxUploadRetryTime(maxUploadRetryTime.toDouble(DurationUnit.SECONDS))
     }
 
     public actual fun useEmulator(host: String, port: Int) {
-        ios.useEmulatorWithHost(host, port.toLong())
+        apple.useEmulatorWithHost(host, port.toLong())
     }
 
-    public actual val reference: StorageReference get() = StorageReference(ios.reference())
+    public actual val reference: StorageReference get() = StorageReference(apple.reference())
 
-    public actual fun reference(location: String): StorageReference = StorageReference(ios.referenceWithPath(location))
+    public actual fun reference(location: String): StorageReference = StorageReference(apple.referenceWithPath(location))
 
-    public actual fun getReferenceFromUrl(fullUrl: String): StorageReference = StorageReference(ios.referenceForURL(fullUrl))
+    public actual fun getReferenceFromUrl(fullUrl: String): StorageReference = StorageReference(apple.referenceForURL(fullUrl))
 }
 
-public actual class StorageReference(public val ios: FIRStorageReference) {
-    public actual val name: String get() = ios.name()
-    public actual val path: String get() = ios.fullPath()
-    public actual val bucket: String get() = ios.bucket()
-    public actual val parent: StorageReference? get() = ios.parent()?.let { StorageReference(it) }
-    public actual val root: StorageReference get() = StorageReference(ios.root())
-    public actual val storage: FirebaseStorage get() = FirebaseStorage(ios.storage())
+public actual class StorageReference(public val apple: FIRStorageReference) {
+    public actual val name: String get() = apple.name()
+    public actual val path: String get() = apple.fullPath()
+    public actual val bucket: String get() = apple.bucket()
+    public actual val parent: StorageReference? get() = apple.parent()?.let { StorageReference(it) }
+    public actual val root: StorageReference get() = StorageReference(apple.root())
+    public actual val storage: FirebaseStorage get() = FirebaseStorage(apple.storage())
 
-    public actual fun child(path: String): StorageReference = StorageReference(ios.child(path))
+    public actual fun child(path: String): StorageReference = StorageReference(apple.child(path))
 
-    public actual suspend fun getMetadata(): FirebaseStorageMetadata? = ios.awaitResult {
+    public actual suspend fun getMetadata(): FirebaseStorageMetadata? = apple.awaitResult {
         metadataWithCompletion { metadata, error ->
             if (error == null) {
                 it.invoke(metadata?.toFirebaseStorageMetadata(), null)
@@ -88,28 +88,28 @@ public actual class StorageReference(public val ios: FIRStorageReference) {
         }
     }
 
-    public actual suspend fun delete(): Unit = await { ios.deleteWithCompletion(it) }
+    public actual suspend fun delete(): Unit = await { apple.deleteWithCompletion(it) }
 
-    public actual suspend fun getDownloadUrl(): String = ios.awaitResult {
+    public actual suspend fun getDownloadUrl(): String = apple.awaitResult {
         downloadURLWithCompletion(completion = it)
     }.absoluteString()!!
 
     public actual suspend fun listAll(): ListResult = awaitResult {
-        ios.listAllWithCompletion { firStorageListResult, nsError ->
+        apple.listAllWithCompletion { firStorageListResult, nsError ->
             it.invoke(firStorageListResult?.let { ListResult(it) }, nsError)
         }
     }
 
-    public actual suspend fun putFile(file: File, metadata: FirebaseStorageMetadata?): Unit = ios.awaitResult { callback ->
+    public actual suspend fun putFile(file: File, metadata: FirebaseStorageMetadata?): Unit = apple.awaitResult { callback ->
         putFile(file.url, metadata?.toFIRMetadata(), callback)
     }.run {}
 
-    public actual suspend fun putData(data: Data, metadata: FirebaseStorageMetadata?): Unit = ios.awaitResult { callback ->
+    public actual suspend fun putData(data: Data, metadata: FirebaseStorageMetadata?): Unit = apple.awaitResult { callback ->
         putData(data.data, metadata?.toFIRMetadata(), callback)
     }.run {}
 
     public actual fun putFileResumable(file: File, metadata: FirebaseStorageMetadata?): ProgressFlow {
-        val ios = ios.putFile(file.url, metadata?.toFIRMetadata())
+        val ios = apple.putFile(file.url, metadata?.toFIRMetadata())
 
         val flow = callbackFlow {
             ios.observeStatus(FIRStorageTaskStatusProgress) {
@@ -144,10 +144,10 @@ public actual class StorageReference(public val ios: FIRStorageReference) {
     }
 }
 
-public actual class ListResult(public val ios: FIRStorageListResult) {
-    public actual val prefixes: List<StorageReference> = ios.prefixes().map { StorageReference(it as FIRStorageReference) }
-    public actual val items: List<StorageReference> = ios.items().map { StorageReference(it as FIRStorageReference) }
-    public actual val pageToken: String? = ios.pageToken()
+public actual class ListResult(public val apple: FIRStorageListResult) {
+    public actual val prefixes: List<StorageReference> = apple.prefixes().map { StorageReference(it as FIRStorageReference) }
+    public actual val items: List<StorageReference> = apple.items().map { StorageReference(it as FIRStorageReference) }
+    public actual val pageToken: String? = apple.pageToken()
 }
 
 public actual class File(public val url: NSURL)

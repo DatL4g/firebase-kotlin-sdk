@@ -11,14 +11,14 @@ public actual val Firebase.performance: FirebasePerformance get() =
 
 public actual fun Firebase.performance(app: FirebaseApp): FirebasePerformance = FirebasePerformance(FIRPerformance.sharedInstance())
 
-public actual class FirebasePerformance(public val ios: FIRPerformance) {
+public actual class FirebasePerformance(public val apple: FIRPerformance) {
 
-    public actual fun newTrace(traceName: String): Trace = Trace(ios.traceWithName(traceName))
+    public actual fun newTrace(traceName: String): Trace = Trace(apple.traceWithName(traceName))
 
-    public actual fun isPerformanceCollectionEnabled(): Boolean = ios.isDataCollectionEnabled()
+    public actual fun isPerformanceCollectionEnabled(): Boolean = apple.isDataCollectionEnabled()
 
     public actual fun setPerformanceCollectionEnabled(enable: Boolean) {
-        ios.dataCollectionEnabled = enable
+        apple.dataCollectionEnabled = enable
     }
 }
 

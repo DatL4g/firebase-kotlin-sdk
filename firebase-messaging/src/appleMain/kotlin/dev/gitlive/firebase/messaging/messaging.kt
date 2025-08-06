@@ -8,19 +8,19 @@ import platform.Foundation.NSError
 public actual val Firebase.messaging: FirebaseMessaging
     get() = FirebaseMessaging(FIRMessaging.messaging())
 
-public actual class FirebaseMessaging(public val ios: FIRMessaging) {
+public actual class FirebaseMessaging(public val apple: FIRMessaging) {
     public actual fun subscribeToTopic(topic: String) {
-        ios.subscribeToTopic(topic)
+        apple.subscribeToTopic(topic)
     }
 
     public actual fun unsubscribeFromTopic(topic: String) {
-        ios.unsubscribeFromTopic(topic)
+        apple.unsubscribeFromTopic(topic)
     }
 
-    public actual suspend fun getToken(): String = awaitResult { ios.tokenWithCompletion(it) }
+    public actual suspend fun getToken(): String = awaitResult { apple.tokenWithCompletion(it) }
 
     public actual suspend fun deleteToken() {
-        await { ios.deleteTokenWithCompletion(it) }
+        await { apple.deleteTokenWithCompletion(it) }
     }
 }
 

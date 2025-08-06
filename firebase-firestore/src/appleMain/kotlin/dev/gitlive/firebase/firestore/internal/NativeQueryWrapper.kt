@@ -56,16 +56,16 @@ internal actual open class NativeQueryWrapper internal actual constructor(actual
             is WhereConstraint.NotInArray -> FIRFilter.filterWhereField(field, notIn = constraint.safeValues)
         }
         is Filter.Path -> when (constraint) {
-            is WhereConstraint.EqualTo -> FIRFilter.filterWhereFieldPath(path.ios, isEqualTo = constraint.safeValue ?: NSNull.`null`())
-            is WhereConstraint.NotEqualTo -> FIRFilter.filterWhereFieldPath(path.ios, isNotEqualTo = constraint.safeValue ?: NSNull.`null`())
-            is WhereConstraint.LessThan -> FIRFilter.filterWhereFieldPath(path.ios, isLessThan = constraint.safeValue)
-            is WhereConstraint.GreaterThan -> FIRFilter.filterWhereFieldPath(path.ios, isGreaterThan = constraint.safeValue)
-            is WhereConstraint.LessThanOrEqualTo -> FIRFilter.filterWhereFieldPath(path.ios, isLessThanOrEqualTo = constraint.safeValue)
-            is WhereConstraint.GreaterThanOrEqualTo -> FIRFilter.filterWhereFieldPath(path.ios, isGreaterThanOrEqualTo = constraint.safeValue)
-            is WhereConstraint.ArrayContains -> FIRFilter.filterWhereFieldPath(path.ios, arrayContains = constraint.safeValue)
-            is WhereConstraint.ArrayContainsAny -> FIRFilter.filterWhereFieldPath(path.ios, arrayContainsAny = constraint.safeValues)
-            is WhereConstraint.InArray -> FIRFilter.filterWhereFieldPath(path.ios, `in` = constraint.safeValues)
-            is WhereConstraint.NotInArray -> FIRFilter.filterWhereFieldPath(path.ios, notIn = constraint.safeValues)
+            is WhereConstraint.EqualTo -> FIRFilter.filterWhereFieldPath(path.apple, isEqualTo = constraint.safeValue ?: NSNull.`null`())
+            is WhereConstraint.NotEqualTo -> FIRFilter.filterWhereFieldPath(path.apple, isNotEqualTo = constraint.safeValue ?: NSNull.`null`())
+            is WhereConstraint.LessThan -> FIRFilter.filterWhereFieldPath(path.apple, isLessThan = constraint.safeValue)
+            is WhereConstraint.GreaterThan -> FIRFilter.filterWhereFieldPath(path.apple, isGreaterThan = constraint.safeValue)
+            is WhereConstraint.LessThanOrEqualTo -> FIRFilter.filterWhereFieldPath(path.apple, isLessThanOrEqualTo = constraint.safeValue)
+            is WhereConstraint.GreaterThanOrEqualTo -> FIRFilter.filterWhereFieldPath(path.apple, isGreaterThanOrEqualTo = constraint.safeValue)
+            is WhereConstraint.ArrayContains -> FIRFilter.filterWhereFieldPath(path.apple, arrayContains = constraint.safeValue)
+            is WhereConstraint.ArrayContainsAny -> FIRFilter.filterWhereFieldPath(path.apple, arrayContainsAny = constraint.safeValues)
+            is WhereConstraint.InArray -> FIRFilter.filterWhereFieldPath(path.apple, `in` = constraint.safeValues)
+            is WhereConstraint.NotInArray -> FIRFilter.filterWhereFieldPath(path.apple, notIn = constraint.safeValues)
         }
     }
 
