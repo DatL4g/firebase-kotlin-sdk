@@ -61,7 +61,7 @@ public actual class OAuthProvider(public val android: AndroidOAuthProvider) {
         auth: FirebaseAuth,
     ) : this(
         AndroidOAuthProvider
-            .newBuilder(provider, auth.android)
+            .newBuilder(provider, auth._android)
             .setScopes(scopes)
             .addCustomParameters(customParameters)
             .build(),
@@ -80,7 +80,7 @@ public actual class OAuthProvider(public val android: AndroidOAuthProvider) {
 
 public actual class PhoneAuthProvider(public val createOptionsBuilder: () -> PhoneAuthOptions.Builder) {
 
-    public actual constructor(auth: FirebaseAuth) : this({ PhoneAuthOptions.newBuilder(auth.android) })
+    public actual constructor(auth: FirebaseAuth) : this({ PhoneAuthOptions.newBuilder(auth._android) })
 
     public actual fun credential(verificationId: String, smsCode: String): PhoneAuthCredential = PhoneAuthCredential(PhoneAuthProvider.getCredential(verificationId, smsCode))
 

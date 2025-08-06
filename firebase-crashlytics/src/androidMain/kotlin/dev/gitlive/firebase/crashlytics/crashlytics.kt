@@ -10,47 +10,49 @@ public actual val Firebase.crashlytics: FirebaseCrashlytics get() =
 
 public actual fun Firebase.crashlytics(app: FirebaseApp): FirebaseCrashlytics = FirebaseCrashlytics(app.android.get(com.google.firebase.crashlytics.FirebaseCrashlytics::class.java))
 
-public actual class FirebaseCrashlytics internal constructor(public val android: com.google.firebase.crashlytics.FirebaseCrashlytics) {
+public actual class FirebaseCrashlytics internal constructor(internal val _android: com.google.firebase.crashlytics.FirebaseCrashlytics) {
+    public val android: com.google.firebase.crashlytics.FirebaseCrashlytics
+        get() = com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance()
 
     public actual fun recordException(exception: Throwable) {
-        android.recordException(exception)
+        _android.recordException(exception)
     }
     public actual fun log(message: String) {
-        android.log(message)
+        _android.log(message)
     }
     public actual fun setUserId(userId: String) {
-        android.setUserId(userId)
+        _android.setUserId(userId)
     }
     public actual fun setCrashlyticsCollectionEnabled(enabled: Boolean) {
-        android.setCrashlyticsCollectionEnabled(enabled)
+        _android.setCrashlyticsCollectionEnabled(enabled)
     }
     public actual fun sendUnsentReports() {
-        android.sendUnsentReports()
+        _android.sendUnsentReports()
     }
     public actual fun deleteUnsentReports() {
-        android.deleteUnsentReports()
+        _android.deleteUnsentReports()
     }
-    public actual fun didCrashOnPreviousExecution(): Boolean = android.didCrashOnPreviousExecution()
+    public actual fun didCrashOnPreviousExecution(): Boolean = _android.didCrashOnPreviousExecution()
     public actual fun setCustomKey(key: String, value: String) {
-        android.setCustomKey(key, value)
+        _android.setCustomKey(key, value)
     }
     public actual fun setCustomKey(key: String, value: Boolean) {
-        android.setCustomKey(key, value)
+        _android.setCustomKey(key, value)
     }
     public actual fun setCustomKey(key: String, value: Double) {
-        android.setCustomKey(key, value)
+        _android.setCustomKey(key, value)
     }
     public actual fun setCustomKey(key: String, value: Float) {
-        android.setCustomKey(key, value)
+        _android.setCustomKey(key, value)
     }
     public actual fun setCustomKey(key: String, value: Int) {
-        android.setCustomKey(key, value)
+        _android.setCustomKey(key, value)
     }
     public actual fun setCustomKey(key: String, value: Long) {
-        android.setCustomKey(key, value)
+        _android.setCustomKey(key, value)
     }
     public actual fun setCustomKeys(customKeys: Map<String, Any>) {
-        android.setCustomKeys(
+        _android.setCustomKeys(
             Builder().apply {
                 customKeys.forEach { (key, value) ->
                     when (value) {
