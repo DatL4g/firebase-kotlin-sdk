@@ -114,12 +114,16 @@ jobs:
           path: "**/firebase-debug.log"
   build-ios:
     needs: jobMatrixSetup
-    runs-on: macos-latest
+    runs-on: macos-15
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.jobMatrixSetup.outputs.ios_test_jobs_matrix) }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+
       - name: Cocoapods cache
         uses: actions/cache@v4
         with:
