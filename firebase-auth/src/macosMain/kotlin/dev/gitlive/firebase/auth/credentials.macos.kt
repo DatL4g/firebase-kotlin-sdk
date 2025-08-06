@@ -11,7 +11,7 @@ public actual class PhoneAuthProvider(public val ios: FIRPhoneAuthProvider) {
 
     public actual suspend fun verifyPhoneNumber(
         phoneNumber: String,
-        verificationProvider: PhoneVerificationProvider
+        verificationProvider: PhoneVerificationProvider,
     ): AuthCredential = error("PhoneAuthProvider is not supported on macos")
 }
 
