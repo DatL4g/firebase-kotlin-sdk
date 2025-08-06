@@ -17,6 +17,7 @@ This is a (temporary?) fork with the following merged upstream pull requests, up
 ### Pull Requests
 
 - https://github.com/GitLiveApp/firebase-kotlin-sdk/pull/738
+- https://github.com/GitLiveApp/firebase-kotlin-sdk/pull/729
 - https://github.com/GitLiveApp/firebase-kotlin-sdk/pull/698
 
 ### Firebase SDK
