@@ -50,7 +50,7 @@ jobs:
         run: ./gradlew :firebase-common:publishToMavenLocal
 
       - name: Publish Firebase Common
-        run: ./gradlew :firebase-common:publishToMavenCentral
+        run: ./gradlew :firebase-common:publishAllPublicationsToMavenCentralRepository
 
       - name: Upload Local Maven Repository
         continue-on-error: true
@@ -107,7 +107,7 @@ jobs:
         run: ./gradlew :firebase-common-internal:publishToMavenLocal
 
       - name: Publish Firebase Common
-        run: ./gradlew :firebase-common-internal:publishToMavenCentral
+        run: ./gradlew :firebase-common-internal:publishAllPublicationsToMavenCentralRepository
 
       - name: Upload Local Maven Repository
         continue-on-error: true
@@ -164,7 +164,7 @@ jobs:
         run: ./gradlew :firebase-app:publishToMavenLocal
 
       - name: Publish Firebase App
-        run: ./gradlew :firebase-app:publishToMavenCentral
+        run: ./gradlew :firebase-app:publishAllPublicationsToMavenCentralRepository
 
       - name: Upload Local Maven Repository
         continue-on-error: true
@@ -235,4 +235,4 @@ jobs:
         run: ./gradlew :firebase-${{ matrix.module }}:build
 
       - name: Publish Firebase App
-        run: ./gradlew :firebase-${{ matrix.module }}:publishToMavenCentral
+        run: ./gradlew :firebase-${{ matrix.module }}:publishAllPublicationsToMavenCentralRepository
