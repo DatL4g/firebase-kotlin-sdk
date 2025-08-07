@@ -8,7 +8,8 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
  * Copyright (c) 2020 GitLive Ltd.  Use of this source code is governed by the Apache 2.0 license.
  */
 
-version = project.property("firebase-messaging.version") as String
+val libVersion = project.property("firebase-messaging.version") as String
+version = libVersion
 
 plugins {
     alias(libs.plugins.android.library)
@@ -193,8 +194,14 @@ if (project.property("firebase-messaging.skipJsTests") == "true") {
 }
 
 mavenPublishing {
-    publishToMavenCentral(automaticRelease = false)
+    publishToMavenCentral(automaticRelease = true)
     signAllPublications()
+
+    coordinates(
+        groupId = "dev.datlag.firebase",
+        artifactId = "firebase-messaging",
+        version = libVersion
+    )
 
     pom {
         name.set("firebase-kotlin-sdk")

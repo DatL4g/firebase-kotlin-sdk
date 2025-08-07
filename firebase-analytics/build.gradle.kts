@@ -8,7 +8,8 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
  * Copyright (c) 2023 GitLive Ltd. Use of this source code is governed by the Apache 2.0 license.
  */
 
-version = project.property("firebase-analytics.version") as String
+val libVersion = project.property("firebase-analytics.version") as String
+version = libVersion
 
 plugins {
     alias(libs.plugins.android.library)
@@ -190,8 +191,14 @@ if (project.property("firebase-analytics.skipJsTests") == "true") {
 }
 
 mavenPublishing {
-    publishToMavenCentral(automaticRelease = false)
+    publishToMavenCentral(automaticRelease = true)
     signAllPublications()
+
+    coordinates(
+        groupId = "dev.datlag.firebase",
+        artifactId = "firebase-analytics",
+        version = libVersion
+    )
 
     pom {
         name.set("firebase-kotlin-sdk")

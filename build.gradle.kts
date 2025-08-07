@@ -89,10 +89,6 @@ subprojects {
         mavenCentral()
     }
 
-    tasks.withType<Sign>().configureEach {
-        onlyIf { !project.gradle.startParameter.taskNames.any { "MavenLocal" in it } }
-    }
-
     val skipPublishing = project.name == "test-utils" // skip publishing for test utils
 
     tasks {
