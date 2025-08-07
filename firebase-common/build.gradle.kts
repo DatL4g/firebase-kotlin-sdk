@@ -163,7 +163,7 @@ if (project.property("firebase-common.skipJsTests") == "true") {
 }
 
 mavenPublishing {
-    publishToMavenCentral(automaticRelease = true)
+    publishToMavenCentral(automaticRelease = false)
     signAllPublications()
 
     pom {

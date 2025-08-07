@@ -216,7 +216,7 @@ fun KotlinNativeTargetWithSimulatorTests.enableKeychainForTests() {
 }
 
 mavenPublishing {
-    publishToMavenCentral(automaticRelease = true)
+    publishToMavenCentral(automaticRelease = false)
     signAllPublications()
 
     pom {

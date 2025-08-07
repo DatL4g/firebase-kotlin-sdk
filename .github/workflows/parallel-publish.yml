@@ -1,0 +1,238 @@
+name: Parallel Publish
+
+on:
+  workflow_dispatch:
+
+env:
+  ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+  ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+  ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY }}
+  ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+
+jobs:
+  build-common:
+    runs-on: macos-15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up XCode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Firebase Common
+        continue-on-error: true
+        run: ./gradlew :firebase-common:build
+
+      - name: Cache Firebase Common
+        continue-on-error: true
+        run: ./gradlew :firebase-common:publishToMavenLocal
+
+      - name: Publish Firebase Common
+        run: ./gradlew :firebase-common:publishToMavenCentral
+
+      - name: Upload Local Maven Repository
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-common-repo
+          path: ~/.m2/repository
+
+  build-common-internal:
+    needs: build-common
+    runs-on: macos-15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Download Local Maven Repository
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: local-common-repo
+          path: ~/.m2/repository
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up XCode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Firebase Common
+        continue-on-error: true
+        run: ./gradlew :firebase-common-internal:build
+
+      - name: Cache Firebase Common
+        continue-on-error: true
+        run: ./gradlew :firebase-common-internal:publishToMavenLocal
+
+      - name: Publish Firebase Common
+        run: ./gradlew :firebase-common-internal:publishToMavenCentral
+
+      - name: Upload Local Maven Repository
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-common-internal-repo
+          path: ~/.m2/repository
+
+  build-app:
+    needs: build-common
+    runs-on: macos-15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Download Local Maven Repository
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: local-common-repo
+          path: ~/.m2/repository
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up XCode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Firebase App
+        continue-on-error: true
+        run: ./gradlew :firebase-app:build
+
+      - name: Cache Firebase App
+        continue-on-error: true
+        run: ./gradlew :firebase-app:publishToMavenLocal
+
+      - name: Publish Firebase App
+        run: ./gradlew :firebase-app:publishToMavenCentral
+
+      - name: Upload Local Maven Repository
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-app-repo
+          path: ~/.m2/repository
+
+  build-modules:
+    needs: [build-common, build-common-internal, build-app]
+    runs-on: macos-15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        module: [analytics, auth, config, crashlytics, database, firestore, functions, messaging, storage, installations, perf]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Download Local Common Repository
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: local-common-repo
+          path: ./tmp-common-repo
+
+      - name: Download Local Common Internal Repository
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: local-common-internal-repo
+          path: ./tmp-common-internal-repo
+
+      - name: Download Local App Repository
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: local-app-repo
+          path: ./tmp-app-repo
+
+      - name: Merge all local repos into the main .m2 directory
+        continue-on-error: true
+        run: |
+          mkdir -p ~/.m2/repository
+          cp -r ./tmp-common-repo/. ~/.m2/repository/
+          cp -r ./tmp-common-internal-repo/. ~/.m2/repository/
+          cp -r ./tmp-app-repo/. ~/.m2/repository/
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up XCode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Firebase ${{ matrix.module }}
+        continue-on-error: true
+        run: ./gradlew :firebase-${{ matrix.module }}:build
+
+      - name: Publish Firebase App
+        run: ./gradlew :firebase-${{ matrix.module }}:publishToMavenCentral
