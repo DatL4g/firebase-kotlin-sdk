@@ -1,30 +1,27 @@
-<h1 align="left">Firebase Kotlin SDK <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/gitliveapp/firebase-kotlin-sdk?style=flat-square"> <a href="https://git.live"><img src="https://img.shields.io/endpoint?style=flatsquare&url=https%3A%2F%2Fteamhub-dev.web.app%2Fbadge%3Forg%3DGitLiveApp%26repo%3Dfirebase-kotlin-sdk"></a></h1>
-<img align="left" width="75px" src="https://avatars2.githubusercontent.com/u/42865805?s=200&v=4"> 
-  <b>Built and <s>maintained</s> with 🧡 by <a href="https://git.live">GitLive</a></b><br/>
-  <i>Development teams merge faster with GitLive</i><br/>
-<br/>
-<br/>
-The Firebase Kotlin SDK is a Kotlin-first SDK for Firebase. It's API is similar to the 
-<a href="https://firebase.google.com/docs/reference/kotlin/packages">Firebase Android SDK Kotlin Extensions</a> 
-but also supports multiplatform projects, enabling you to use Firebase directly from your common source targeting 
-<strong>iOS</strong>, <strong>Android</strong>, <strong>Desktop</strong> or <strong>Web</strong>, enabling the use of 
-Firebase as a backend for <a href="https://www.jetbrains.com/lp/compose-multiplatform/">Compose Multiplatform</a>, for example.
-
-## Fork
+# 🍴 Firebase Kotlin Multiplatform  SDK (Updated Fork)
 
 This is a (temporary?) fork with the following merged upstream pull requests, updated dependencies and configuration:
 
-### Pull Requests
+## ⛓️‍💥 Pull Requests
+
+These upstream pull requests have been (rebased and) merged.
 
 - https://github.com/GitLiveApp/firebase-kotlin-sdk/pull/738
 - https://github.com/GitLiveApp/firebase-kotlin-sdk/pull/729
 - https://github.com/GitLiveApp/firebase-kotlin-sdk/pull/698
 
-### Firebase SDK
+## ⚙️ Firebase SDK
 
-- **Android:** 34.0.0
-- **iOS:** 12.1.0
+- **Android:** 34.1.0
+- **Apple:** 12.1.0
 - **Javascript:** 12.0.0
+
+## 💖 Support my work
+
+> [!IMPORTANT]
+> I’m a creator and maintainer of multiple open-source projects, **especially in the Kotlin Multiplatform world**, which take a lot of time, energy, and coffee to keep going :)  
+> If my work has helped you or your team, please consider [sponsoring](https://github.com/sponsors/DatL4g/) me to help keep these projects alive and thriving.  
+> Your support means I can spend more time building and improving tools for the community.
 
 ## Available libraries
 
@@ -32,19 +29,19 @@ The following libraries are available for the various Firebase products.
 
 | Service or Product	                                                             | Gradle Dependency                                                                                                            | API Coverage                                                                                                                                                             |
 |---------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Analytics](https://firebase.google.com/docs/analytics)                         | [`dev.datlag.firebase:firebase-analytics:2.1.0`](https://search.maven.org/artifact/dev.gitlive/firebase-analytics/2.1.0/pom) | [![80%](https://img.shields.io/badge/-80%25-green?style=flat-square)](/firebase-auth/src/commonMain/kotlin/dev/gitlive/firebase/auth/auth.kt)                            |
-| [Authentication](https://firebase.google.com/docs/auth)                         | [`dev.datlag.firebase:firebase-auth:2.1.0`](https://search.maven.org/artifact/dev.gitlive/firebase-auth/2.1.0/pom)                   | [![80%](https://img.shields.io/badge/-80%25-green?style=flat-square)](/firebase-auth/src/commonMain/kotlin/dev/gitlive/firebase/auth/auth.kt)                            |
-| [Realtime Database](https://firebase.google.com/docs/database)                  | [`dev.datlag.firebase:firebase-database:2.1.0`](https://search.maven.org/artifact/dev.gitlive/firebase-database/2.1.0/pom)           | [![70%](https://img.shields.io/badge/-70%25-orange?style=flat-square)](/firebase-database/src/commonMain/kotlin/dev/gitlive/firebase/database/database.kt)               |
-| [Cloud Firestore](https://firebase.google.com/docs/firestore)                   | [`dev.datlag.firebase:firebase-firestore:2.1.0`](https://search.maven.org/artifact/dev.gitlive/firebase-firestore/2.1.0/pom)         | [![60%](https://img.shields.io/badge/-60%25-orange?style=flat-square)](/firebase-firestore/src/commonMain/kotlin/dev/gitlive/firebase/firestore/firestore.kt)            |
-| [Cloud Functions](https://firebase.google.com/docs/functions)                   | [`dev.datlag.firebase:firebase-functions:2.1.0`](https://search.maven.org/artifact/dev.gitlive/firebase-functions/2.1.0/pom)         | [![80%](https://img.shields.io/badge/-80%25-green?style=flat-square)](/firebase-functions/src/commonMain/kotlin/dev/gitlive/firebase/functions/functions.kt)             |
-| [Cloud Messaging](https://firebase.google.com/docs/cloud-messaging)             | [`dev.datlag.firebase:firebase-messaging:2.1.0`](https://search.maven.org/artifact/dev.gitlive/firebase-messaging/2.1.0/pom)         | [![1%](https://img.shields.io/badge/-10%25-orange?style=flat-square)](/firebase-messaging/src/commonMain/kotlin/dev/gitlive/firebase/messaging/messaging.kt)           |
-| [Cloud Storage](https://firebase.google.com/docs/storage)                       | [`dev.datlag.firebase:firebase-storage:2.1.0`](https://search.maven.org/artifact/dev.gitlive/firebase-storage/2.1.0/pom)             | [![40%](https://img.shields.io/badge/-40%25-orange?style=flat-square)](/firebase-storage/src/commonMain/kotlin/dev/gitlive/firebase/storage/storage.kt)                  |
-| [Installations](https://firebase.google.com/docs/projects/manage-installations) | [`dev.datlag.firebase:firebase-installations:2.1.0`](https://search.maven.org/artifact/dev.gitlive/firebase-installations/2.1.0/pom) | [![90%](https://img.shields.io/badge/-90%25-green?style=flat-square)](/firebase-installations/src/commonMain/kotlin/dev/gitlive/firebase/installations/installations.kt) |
-| [Remote Config](https://firebase.google.com/docs/remote-config)                 | [`dev.datlag.firebase:firebase-config:2.1.0`](https://search.maven.org/artifact/dev.gitlive/firebase-config/2.1.0/pom)               | [![20%](https://img.shields.io/badge/-20%25-orange?style=flat-square)](/firebase-config/src/commonMain/kotlin/dev/gitlive/firebase/remoteconfig/FirebaseRemoteConfig.kt) |
-| [Performance](https://firebase.google.com/docs/perf-mon)                        | [`dev.datlag.firebase:firebase-perf:2.1.0`](https://search.maven.org/artifact/dev.gitlive/firebase-perf/2.1.0/pom)                   | [![1%](https://img.shields.io/badge/-10%25-orange?style=flat-square)](/firebase-perf/src/commonMain/kotlin/dev/gitlive/firebase/perf/performance.kt)                      |
-| [Crashlytics](https://firebase.google.com/docs/crashlytics)                     | [`dev.datlag.firebase:firebase-crashlytics:2.1.0`](https://search.maven.org/artifact/dev.gitlive/firebase-crashlytics/2.1.0/pom)     | [![80%](https://img.shields.io/badge/-10%25-orange?style=flat-square)](/firebase-crashlytics/src/commonMain/kotlin/dev/gitlive/firebase/crashlytics/crashlytics.kt)       |
+| [Analytics](https://firebase.google.com/docs/analytics)                         | [`dev.datlag.firebase:firebase-analytics:2.1.0`](https://search.maven.org/artifact/dev.datlag.firebase/firebase-analytics/2.1.0/pom) | [![80%](https://img.shields.io/badge/-80%25-green?style=flat-square)](/firebase-auth/src/commonMain/kotlin/dev/gitlive/firebase/auth/auth.kt)                            |
+| [Authentication](https://firebase.google.com/docs/auth)                         | [`dev.datlag.firebase:firebase-auth:2.1.0`](https://search.maven.org/artifact/dev.datlag.firebase/firebase-auth/2.1.0/pom)                   | [![80%](https://img.shields.io/badge/-80%25-green?style=flat-square)](/firebase-auth/src/commonMain/kotlin/dev/gitlive/firebase/auth/auth.kt)                            |
+| [Realtime Database](https://firebase.google.com/docs/database)                  | [`dev.datlag.firebase:firebase-database:2.1.0`](https://search.maven.org/artifact/dev.datlag.firebase/firebase-database/2.1.0/pom)           | [![70%](https://img.shields.io/badge/-70%25-orange?style=flat-square)](/firebase-database/src/commonMain/kotlin/dev/gitlive/firebase/database/database.kt)               |
+| [Cloud Firestore](https://firebase.google.com/docs/firestore)                   | [`dev.datlag.firebase:firebase-firestore:2.1.0`](https://search.maven.org/artifact/dev.datlag.firebase/firebase-firestore/2.1.0/pom)         | [![60%](https://img.shields.io/badge/-60%25-orange?style=flat-square)](/firebase-firestore/src/commonMain/kotlin/dev/gitlive/firebase/firestore/firestore.kt)            |
+| [Cloud Functions](https://firebase.google.com/docs/functions)                   | [`dev.datlag.firebase:firebase-functions:2.1.0`](https://search.maven.org/artifact/dev.datlag.firebase/firebase-functions/2.1.0/pom)         | [![80%](https://img.shields.io/badge/-80%25-green?style=flat-square)](/firebase-functions/src/commonMain/kotlin/dev/gitlive/firebase/functions/functions.kt)             |
+| [Cloud Messaging](https://firebase.google.com/docs/cloud-messaging)             | [`dev.datlag.firebase:firebase-messaging:2.1.0`](https://search.maven.org/artifact/dev.datlag.firebase/firebase-messaging/2.1.0/pom)         | [![1%](https://img.shields.io/badge/-10%25-orange?style=flat-square)](/firebase-messaging/src/commonMain/kotlin/dev/gitlive/firebase/messaging/messaging.kt)           |
+| [Cloud Storage](https://firebase.google.com/docs/storage)                       | [`dev.datlag.firebase:firebase-storage:2.1.0`](https://search.maven.org/artifact/dev.datlag.firebase/firebase-storage/2.1.0/pom)             | [![40%](https://img.shields.io/badge/-40%25-orange?style=flat-square)](/firebase-storage/src/commonMain/kotlin/dev/gitlive/firebase/storage/storage.kt)                  |
+| [Installations](https://firebase.google.com/docs/projects/manage-installations) | [`dev.datlag.firebase:firebase-installations:2.1.0`](https://search.maven.org/artifact/dev.datlag.firebase/firebase-installations/2.1.0/pom) | [![90%](https://img.shields.io/badge/-90%25-green?style=flat-square)](/firebase-installations/src/commonMain/kotlin/dev/gitlive/firebase/installations/installations.kt) |
+| [Remote Config](https://firebase.google.com/docs/remote-config)                 | [`dev.datlag.firebase:firebase-config:2.1.0`](https://search.maven.org/artifact/dev.datlag.firebase/firebase-config/2.1.0/pom)               | [![20%](https://img.shields.io/badge/-20%25-orange?style=flat-square)](/firebase-config/src/commonMain/kotlin/dev/gitlive/firebase/remoteconfig/FirebaseRemoteConfig.kt) |
+| [Performance](https://firebase.google.com/docs/perf-mon)                        | [`dev.datlag.firebase:firebase-perf:2.1.0`](https://search.maven.org/artifact/dev.datlag.firebase/firebase-perf/2.1.0/pom)                   | [![1%](https://img.shields.io/badge/-10%25-orange?style=flat-square)](/firebase-perf/src/commonMain/kotlin/dev/gitlive/firebase/perf/performance.kt)                      |
+| [Crashlytics](https://firebase.google.com/docs/crashlytics)                     | [`dev.datlag.firebase:firebase-crashlytics:2.1.0`](https://search.maven.org/artifact/dev.datlag.firebase/firebase-crashlytics/2.1.0/pom)     | [![80%](https://img.shields.io/badge/-10%25-orange?style=flat-square)](/firebase-crashlytics/src/commonMain/kotlin/dev/gitlive/firebase/crashlytics/crashlytics.kt)       |
 
-Is the Firebase library or API you need missing? [Create an issue](https://github.com/GitLiveApp/firebase-kotlin-sdk/issues/new?labels=API+coverage&template=increase-api-coverage.md&title=Add+%5Bclass+name%5D.%5Bfunction+name%5D+to+%5Blibrary+name%5D+for+%5Bplatform+names%5D) to request additional API coverage or be awesome and [submit a PR](https://github.com/GitLiveApp/firebase-kotlin-sdk/fork)
+Is the Firebase library or API you need missing? [Create an issue](https://github.com/DatL4g/firebase-kotlin-sdk/issues/new?labels=API+coverage&template=increase-api-coverage.md&title=Add+%5Bclass+name%5D.%5Bfunction+name%5D+to+%5Blibrary+name%5D+for+%5Bplatform+names%5D) to request additional API coverage or be awesome and [submit a PR](https://github.com/DatL4g/firebase-kotlin-sdk/fork)
 
 ## Kotlin-first design
 
